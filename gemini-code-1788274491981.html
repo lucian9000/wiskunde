@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="af">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Vorms en Tyd Avontuur - Graad 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #0ea5e9;
+    --primary-dark: #0284c7;
+    --accent: #f43f5e;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --dark-border: #1e293b;
+    --card-bg: #ffffff;
+  }
+
+  * {
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-select: none;
+    font-family: 'Fredoka', cursive, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 45%, #f472b6 45.5%, #e11d48 100%);
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    color: var(--dark-border);
+    overflow-x: hidden;
+  }
+
+  .screen-shake { animation: epicShake 0.85s cubic-bezier(.36,.07,.19,.97) both; }
+
+  @keyframes epicShake {
+    10%, 90% { transform: translate3d(-4px, 2px, 0) rotate(-1deg); }
+    20%, 80% { transform: translate3d(6px, -4px, 0) rotate(2deg); }
+    30%, 50%, 70% { transform: translate3d(-8px, 6px, 0) rotate(-2deg); }
+    40%, 60% { transform: translate3d(8px, -6px, 0) rotate(1.5deg); }
+  }
+
+  .game-container {
+    width: 100%;
+    max-width: 580px;
+    background: var(--card-bg);
+    border-radius: 28px;
+    border: 5px solid var(--dark-border);
+    box-shadow: 0 12px 0 var(--dark-border), 0 25px 35px rgba(0,0,0,0.25);
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+  }
+
+  .tab-bar {
+    display: flex;
+    background: #e2e8f0;
+    border-bottom: 4px solid var(--dark-border);
+  }
+
+  .nav-btn {
+    flex: 1;
+    padding: 14px 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.15s ease;
+  }
+
+  .nav-btn.active {
+    background: var(--card-bg);
+    color: var(--dark-border);
+    border-bottom: 4px solid var(--primary);
+    margin-bottom: -4px;
+  }
+
+  .progress-wrap { background: #cbd5e1; height: 14px; width: 100%; }
+  .progress-bar {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #f59e0b, #0ea5e9);
+    transition: width 0.35s ease-out;
+  }
+
+  .hud {
+    background: #f8fafc;
+    border-bottom: 3.5px solid #e2e8f0;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .stat-pill {
+    background: #fff;
+    border: 3px solid var(--dark-border);
+    border-radius: 18px;
+    padding: 6px 14px;
+    font-weight: 800;
+    font-size: 1.05rem;
+    box-shadow: 0 3px 0 var(--dark-border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .view-panel { display: none; padding: 22px 18px 28px; text-align: center; }
+  .view-panel.active { display: block; }
+
+  .hero-badge {
+    font-size: 4.8rem;
+    margin: 6px 0;
+    display: inline-block;
+    animation: floatHero 2.5s ease-in-out infinite;
+  }
+
+  @keyframes floatHero {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.05); }
+  }
+
+  .title-main { font-size: 1.9rem; font-weight: 800; color: #1e293b; margin: 4px 0; line-height: 1.2; }
+  .title-sub { font-size: 1.05rem; color: #64748b; margin: 0 0 20px; font-weight: 600; }
+
+  .feature-box {
+    background: #f1f5f9;
+    border: 3px solid #cbd5e1;
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 22px;
+    text-align: left;
+  }
+  .feature-item { font-size: 0.95rem; font-weight: 700; color: #334155; margin: 6px 0; display: flex; align-items: center; gap: 8px; }
+
+  .action-btn {
+    width: 100%; max-width: 320px; margin: 8px auto; padding: 16px 20px;
+    font-size: 1.25rem; font-weight: 800; color: #fff;
+    border: 4px solid var(--dark-border); border-radius: 24px;
+    cursor: pointer; box-shadow: 0 6px 0 var(--dark-border);
+    transition: all 0.1s ease; display: block;
+  }
+  .action-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--dark-border); }
+
+  .btn-start { background: #0ea5e9; }
+  .btn-restart { background: #8b5cf6; }
+  .btn-clear { background: #f43f5e; }
+
+  .category-tag {
+    display: inline-block; background: #bae6fd; color: #0369a1;
+    padding: 5px 14px; border-radius: 14px; border: 2.5px solid var(--dark-border);
+    font-weight: 800; font-size: 0.85rem; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 10px;
+  }
+
+  .q-prompt-box { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 60px; margin-bottom: 20px; }
+  .q-text { font-size: 1.3rem; font-weight: 700; line-height: 1.35; color: #0f172a; margin: 0; }
+
+  .audio-read-btn {
+    background: #fcd34d; border: 2.5px solid var(--dark-border); border-radius: 50%;
+    width: 42px; height: 42px; flex-shrink: 0; cursor: pointer; font-size: 1.2rem;
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 0 var(--dark-border);
+  }
+  .audio-read-btn:active { transform: scale(0.92); }
+
+  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 440px) { .choice-grid { grid-template-columns: 1fr; } }
+
+  .choice-card {
+    background: #f8fafc; border: 3.5px solid var(--dark-border); border-radius: 16px;
+    padding: 16px 10px; font-size: 1.2rem; font-weight: 700; color: #1e293b;
+    cursor: pointer; box-shadow: 0 5px 0 var(--dark-border);
+    transition: all 0.1s ease; min-height: 64px; display: flex; align-items: center; justify-content: center;
+  }
+  .choice-card:hover { background: #f1f5f9; }
+  .choice-card:active, .choice-card.selected { 
+    transform: translateY(4px); box-shadow: 0 1px 0 var(--dark-border); background: #e2e8f0; 
+  }
+
+  .review-container {
+    background: #f8fafc; border: 3px solid #cbd5e1; border-radius: 16px;
+    padding: 16px; margin: 20px 0; max-height: 300px; overflow-y: auto; text-align: left; display: none;
+  }
+  .review-item { border-bottom: 2px dashed #cbd5e1; padding: 12px 0; }
+  .review-item:last-child { border-bottom: none; }
+  .review-q { font-weight: 700; color: #1e293b; margin-bottom: 6px; font-size: 1.05rem; line-height: 1.3; }
+  .review-ans-row { display: flex; flex-direction: column; gap: 4px; }
+  .review-wrong { color: #e11d48; font-weight: 700; font-size: 0.95rem; text-decoration: line-through; }
+  .review-correct { color: #10b981; font-weight: 700; font-size: 0.95rem; }
+
+  .history-list { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 20px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
+  .history-item { background: #f8fafc; border: 3px solid #cbd5e1; border-radius: 16px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; }
+  .history-item.pass-item { border-color: #10b981; background: #ecfdf5; }
+  .history-item.perfect-item { border-color: #f59e0b; background: #fef3c7; box-shadow: 0 0 10px rgba(245, 158, 11, 0.4); }
+  .hist-info { text-align: left; }
+  .hist-title { font-weight: 800; font-size: 1rem; color: #1e293b; }
+  .hist-date { font-size: 0.8rem; color: #64748b; }
+  .hist-score { font-size: 1.3rem; font-weight: 800; color: #0ea5e9; }
+  .history-item.pass-item .hist-score { color: #10b981; }
+  .history-item.perfect-item .hist-score { color: #d97706; }
+
+  canvas#fxCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
+  #balloonStage { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 998; display: none; }
+  
+  .giant-balloon { position: absolute; bottom: -150px; font-size: 4rem; animation: balloonAscend linear forwards; }
+  @keyframes balloonAscend { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-120vh) rotate(25deg); opacity: 0.95; } }
+
+  #shatterBanner {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    width: 90vw; max-width: 440px; background: #fde047; border: 6px solid #1e293b;
+    border-radius: 30px; box-shadow: 0 14px 0 #1e293b, 0 20px 40px rgba(0,0,0,0.5);
+    padding: 24px; text-align: center; z-index: 1000; display: none;
+    animation: popShatter 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes popShatter { 0% { transform: translate(-50%, -50%) scale(0) rotate(-15deg); } 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); } }
+</style>
+</head>
+<body>
+
+<canvas id="fxCanvas"></canvas>
+<div id="balloonStage"></div>
+
+<div id="shatterBanner">
+  <div style="font-size: 4.5rem;">👑💥</div>
+  <h1 style="margin: 4px 0; font-size: 2.2rem; color: #1e293b;">100% VORMS & TYD BAAS!</h1>
+  <p style="font-size: 1.25rem; font-weight: 700; color: #b45309; margin: 6px 0 18px;">
+    Jy het al 30 vrae verpletter met jou slim brein! 🎉
+  </p>
+  <button class="action-btn btn-restart" id="bannerCloseBtn">Bekyk Resultate 🏆</button>
+</div>
+
+<div class="game-container" id="mainContainer">
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="nav-btn active" id="tabHomeBtn">🏠 Begin</button>
+    <button class="nav-btn" id="tabPlayBtn">🎮 Speel</button>
+    <button class="nav-btn" id="tabHistBtn">📊 Resultate</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud" id="hudBar">
+    <div class="stat-pill"><span style="color:#0ea5e9;">🕒</span> <span>Vorms & Tyd</span></div>
+    <div class="stat-pill"><span>Vraag <span id="qPosTracker">1 / 30</span></span></div>
+  </div>
+
+  <!-- PANEL 1: LANDING PAGE -->
+  <div class="view-panel active" id="panelHome">
+    <div class="hero-badge">🧊</div>
+    <h1 class="title-main">Vorms & Tyd Avontuur</h1>
+    <p class="title-sub">Graad 2 Uitdaging (30 Vrae)</p>
+
+    <div class="feature-box">
+      <div class="feature-item"><span>🔵</span> <strong>2D-Vorms:</strong> Hoeke en Sye (Vierkant, Ovaal)</div>
+      <div class="feature-item"><span>🕒</span> <strong>Tyd:</strong> Horlosies lees en Ure bereken</div>
+      <div class="feature-item"><span>📅</span> <strong>Tyd Feite:</strong> Minute, Dae, Weke, Maande</div>
+      <div class="feature-item"><span>🎲</span> <strong>3D-Voorwerpe:</strong> Rande en Vlakke van vorms</div>
+    </div>
+
+    <button class="action-btn btn-start" id="startQuestBtn">BEGIN DIE TOETS! 🌟</button>
+  </div>
+
+  <!-- PANEL 2: QUIZ PANEL -->
+  <div class="view-panel" id="panelQuiz">
+    <div class="category-tag" id="catTag">Tyd</div>
+    
+    <div class="q-prompt-box">
+      <h2 class="q-text" id="qPrompt">Laai vraag...</h2>
+      <button class="audio-read-btn" id="readAloudBtn" title="Lees vir my">🔊</button>
+    </div>
+
+    <div class="choice-grid" id="choicesGrid"></div>
+  </div>
+
+  <!-- PANEL 3: SUMMARY / VICTORY -->
+  <div class="view-panel" id="panelVictory">
+    <div class="hero-badge" id="vicTrophy">🏆</div>
+    <h1 class="title-main" id="vicTitle">Klaar!</h1>
+    <p class="title-sub" id="vicScore" style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin: 8px 0;">30 / 30</p>
+    <p id="vicMessage" style="font-size: 1.15rem; font-weight: 700; color: #475569; margin-bottom: 12px;">Baie geluk met jou harde werk!</p>
+
+    <!-- Incorrect Answers Review Container -->
+    <div class="review-container" id="wrongAnswersReview"></div>
+
+    <button class="action-btn btn-restart" id="retryQuestBtn" style="margin-top: 20px;">Speel Nuwe Vrae 🔁</button>
+  </div>
+
+  <!-- PANEL 4: RESULTS HISTORY -->
+  <div class="view-panel" id="panelHistory">
+    <h2 class="title-main" style="font-size: 1.5rem;">📊 Vorige Resultate</h2>
+    <p class="title-sub">Al jou toetse wat op hierdie toestel voltooi is</p>
+    
+    <div class="history-list" id="historyListArea"></div>
+
+    <button class="action-btn btn-clear" id="clearHistoryBtn">Maak Skoon 🗑️</button>
+  </div>
+</div>
+
+<script>
+// --- Web Audio Synth Engine ---
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(type) {
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  const now = audioCtx.currentTime;
+
+  if (type === 'click') {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(600, now);
+    osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.1);
+  }
+  else if (type === 'shatter') {
+    const bufferSize = audioCtx.sampleRate * 0.4;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) { data[i] = Math.random() * 2 - 1; }
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'highpass';
+    filter.frequency.value = 2400;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.4, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(audioCtx.destination);
+    noise.start(now);
+
+    [800, 1400, 2200, 3100].forEach(f => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.1, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      o.connect(g);
+      g.connect(audioCtx.destination);
+      o.start(now);
+      o.stop(now + 0.3);
+    });
+  }
+  else if (type === 'win') {
+    [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.12, now + i * 0.1);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.3);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now + i * 0.1);
+      osc.stop(now + i * 0.1 + 0.3);
+    });
+  }
+}
+
+// --- 50 Vraag Databasis (2D, 3D, Horlosies, Tyd) ---
+const allQuestions = [
+  // 2D Vorms
+  { cat: "2D-Vorms", q: "Watter vorm het 3 hoeke en reguit sye?", opts: ["Sirkel", "Driehoek", "Vierkant", "Ovaal"], ans: 1 },
+  { cat: "2D-Vorms", q: "Watter vorm het 1 geboë sy en GEEN hoeke nie, en is perfek rond?", opts: ["Sirkel", "Driehoek", "Vierkant", "Reghoek"], ans: 0 },
+  { cat: "2D-Vorms", q: "Watter vorm het 4 hoeke en 4 GELYKE sye?", opts: ["Reghoek", "Ovaal", "Vierkant", "Driehoek"], ans: 2 },
+  { cat: "2D-Vorms", q: "Watter vorm het 2 lang sye, 2 kort sye en 4 hoeke?", opts: ["Vierkant", "Sirkel", "Reghoek", "Ovaal"], ans: 2 },
+  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n ovaal?", opts: ["1", "4", "2", "GEEN"], ans: 3 },
+  { cat: "2D-Vorms", q: "Hoeveel sye het 'n sirkel?", opts: ["1", "3", "4", "0"], ans: 0 },
+  { cat: "2D-Vorms", q: "Het 'n vierkant geboë of reguit sye?", opts: ["Geboë sye", "Reguit sye", "Albei", "Geen sye nie"], ans: 1 },
+  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n driehoek?", opts: ["1", "2", "3", "4"], ans: 2 },
+  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n reghoek?", opts: ["3", "4", "5", "Geen"], ans: 1 },
+  { cat: "2D-Vorms", q: "Watter vorm lyk soos 'n platgedrukte of uitgerekte sirkel?", opts: ["Ovaal", "Reghoek", "Vierkant", "Driehoek"], ans: 0 },
+  
+  // Tyd Feite
+  { cat: "Tyd Feite", q: "Hoeveel minute is daar in 1 uur?", opts: ["30 minute", "60 minute", "12 minute", "24 minute"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel sekondes is daar in 1 minuut?", opts: ["10 sekondes", "30 sekondes", "60 sekondes", "100 sekondes"], ans: 2 },
+  { cat: "Tyd Feite", q: "Hoeveel ure is daar in 1 dag EN nag saam?", opts: ["12 ure", "24 ure", "48 ure", "60 ure"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel ure is daar net in 1 dag (oggend/middag)?", opts: ["6 ure", "12 ure", "24 ure", "8 ure"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel ure is daar net in 1 nag?", opts: ["8 ure", "12 ure", "24 ure", "10 ure"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel seisoene kry ons in 1 jaar?", opts: ["2 seisoene", "3 seisoene", "4 seisoene", "12 seisoene"], ans: 2 },
+  { cat: "Tyd Feite", q: "Hoeveel maande is daar in 1 jaar?", opts: ["10 maande", "12 maande", "30 maande", "4 maande"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 jaar (gewoonlik)?", opts: ["365 dae", "300 dae", "350 dae", "400 dae"], ans: 0 },
+  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 volle week?", opts: ["5 dae", "6 dae", "7 dae", "10 dae"], ans: 2 },
+  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 skoolweek (Maandag tot Vrydag)?", opts: ["4 dae", "5 dae", "7 dae", "2 dae"], ans: 1 },
+
+  // Horlosie Lees
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 12 is, watter tyd wys dit?", opts: ["Kwart oor", "Half", "Uur (Voluur)", "Kwart voor"], ans: 2 },
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 3 is, watter tyd wys dit?", opts: ["Kwart oor", "Half", "Kwart voor", "Uur"], ans: 0 },
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 6 is, watter tyd wys dit?", opts: ["Kwart oor", "Uur", "Kwart voor", "Half"], ans: 3 },
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 9 is, watter tyd wys dit?", opts: ["Kwart oor", "Half", "Kwart voor", "Uur"], ans: 2 },
+  { cat: "Tyd op die Horlosie", q: "Watter nommer wys 'Half' vir die lang wyser?", opts: ["12", "3", "6", "9"], ans: 2 },
+  { cat: "Tyd op die Horlosie", q: "Watter nommer wys 'Kwart oor' vir die lang wyser?", opts: ["12", "3", "6", "9"], ans: 1 },
+
+  // Verloop van Tyd (Berekeninge)
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 7 uur die oggend tot 12 uur die middag?", opts: ["3 ure", "4 ure", "5 ure", "6 ure"], ans: 2 },
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 2 uur die middag tot 4 uur in die middag?", opts: ["1 uur", "2 ure", "3 ure", "4 ure"], ans: 1 },
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 2 uur die middag tot 8 uur die aand?", opts: ["4 ure", "5 ure", "6 ure", "7 ure"], ans: 2 },
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 10 uur die oggend tot 12 uur middag?", opts: ["2 ure", "3 ure", "4 ure", "1 uur"], ans: 0 },
+  { cat: "Verloop van Tyd", q: "As skool 7 uur begin en pouse is 10 uur, hoeveel ure is jy in die klas?", opts: ["2 ure", "3 ure", "4 ure", "5 ure"], ans: 1 },
+  
+  // 3D Voorwerpe - Hoeke
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n kubus?", opts: ["4 hoeke", "6 hoeke", "8 hoeke", "12 hoeke"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n silinder?", opts: ["2 hoeke", "4 hoeke", "8 hoeke", "Geen hoeke"], ans: 3 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n sfeer?", opts: ["Geen hoeke", "1 hoek", "2 hoeke", "4 hoeke"], ans: 0 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n keël?", opts: ["Geen hoeke", "1 hoek", "2 hoeke", "3 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n vierkantige piramide?", opts: ["4 hoeke", "5 hoeke", "6 hoeke", "8 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n driehoekige piramide?", opts: ["3 hoeke", "4 hoeke", "5 hoeke", "6 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n reghoekige prisma?", opts: ["6 hoeke", "8 hoeke", "10 hoeke", "12 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n driehoekige prisma?", opts: ["5 hoeke", "6 hoeke", "8 hoeke", "9 hoeke"], ans: 1 },
+
+  // 3D Voorwerpe - Rande
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n kubus?", opts: ["8 rande", "10 rande", "12 rande", "6 rande"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n reghoekige prisma?", opts: ["6 rande", "8 rande", "10 rande", "12 rande"], ans: 3 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n silinder?", opts: ["Geen", "1 rand", "2 rande", "3 rande"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n keël?", opts: ["Geen", "1 rand", "2 rande", "3 rande"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n driehoekige prisma?", opts: ["6 rande", "7 rande", "8 rande", "9 rande"], ans: 3 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n vierkantige piramide?", opts: ["5 rande", "6 rande", "8 rande", "10 rande"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n driehoekige piramide?", opts: ["4 rande", "5 rande", "6 rande", "8 rande"], ans: 2 },
+
+  // 3D Voorwerpe - Vlakke
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n sfeer (soos 'n bal)?", opts: ["Geen", "1 vlak", "2 vlakke", "3 vlakke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n silinder?", opts: ["1 vlak", "2 vlakke", "3 vlakke", "4 vlakke"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n kubus (soos 'n dobbelsteen)?", opts: ["4 vlakke", "6 vlakke", "8 vlakke", "12 vlakke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n keël (soos 'n roomyshorinkie)?", opts: ["1 vlak", "2 vlakke", "3 vlakke", "4 vlakke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n vierkantige piramide?", opts: ["4 vlakke", "5 vlakke", "6 vlakke", "8 vlakke"], ans: 1 },
+
+  // Logika / Ekstra gemeng
+  { cat: "2D en 3D Gemeng", q: "Watter twee 3D-vorms het albei 8 hoeke en 12 rande?", opts: ["Kubus & Silinder", "Kubus & Reghoekige Prisma", "Sfeer & Keël", "Piramides"], ans: 1 },
+  { cat: "2D-Vorms", q: "'n Vierkant het 4 sye. Hoeveel sye het 2 vierkante altesaam?", opts: ["4 sye", "6 sye", "8 sye", "10 sye"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Watter 2D vorm pas die beste by die vlak van 'n kubus?", opts: ["Sirkel", "Driehoek", "Vierkant", "Ovaal"], ans: 2 },
+  { cat: "Tyd Logika", q: "As dit halfpad deur 'n uur is (30 minute is verby), waar staan die lang wyser?", opts: ["By die 12", "By die 3", "By die 6", "By die 9"], ans: 2 },
+  { cat: "Verloop van Tyd", q: "As jy 8 uur gaan slaap en 7 uur opstaan in die oggend, was dit die dag of die nag?", opts: ["Die dag", "Die nag", "Albei", "Geen"], ans: 1 }
+];
+
+// --- State Management ---
+let quizSet = [];
+let currentQIdx = 0;
+let isLocked = false;
+const MAX_QUESTIONS_PER_SESSION = 30;
+
+// Storage key 
+const STORE_KEY = "wiskunde_avontuur_scores_v3_tyd_vorms";
+
+function getHistory() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) { return []; }
+}
+
+function saveScore(got, total) {
+  try {
+    const hist = getHistory();
+    hist.push({
+      date: new Date().toISOString(),
+      score: got,
+      total: total,
+      pct: Math.round((got / total) * 100)
+    });
+    localStorage.setItem(STORE_KEY, JSON.stringify(hist));
+  } catch (e) {}
+}
+
+// --- Navigation & View Switching ---
+function showView(viewId) {
+  document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+  if (viewId === 'home') {
+    document.getElementById('panelHome').classList.add('active');
+    document.getElementById('tabHomeBtn').classList.add('active');
+    document.getElementById('hudBar').style.display = 'none';
+  } else if (viewId === 'quiz') {
+    document.getElementById('panelQuiz').classList.add('active');
+    document.getElementById('tabPlayBtn').classList.add('active');
+    document.getElementById('hudBar').style.display = 'flex';
+  } else if (viewId === 'victory') {
+    document.getElementById('panelVictory').classList.add('active');
+    document.getElementById('tabPlayBtn').classList.add('active');
+    document.getElementById('hudBar').style.display = 'none';
+  } else if (viewId === 'history') {
+    document.getElementById('panelHistory').classList.add('active');
+    document.getElementById('tabHistBtn').classList.add('active');
+    document.getElementById('hudBar').style.display = 'none';
+    renderHistory();
+  }
+}
+
+document.getElementById('tabHomeBtn').onclick = () => showView('home');
+document.getElementById('tabPlayBtn').onclick = () => {
+  if (quizSet.length === 0 || currentQIdx >= quizSet.length) startNewQuiz();
+  else showView('quiz');
+};
+document.getElementById('tabHistBtn').onclick = () => showView('history');
+
+// --- Quiz Logic ---
+function startNewQuiz() {
+  // Skuifel die 50 vrae lukraak en kies NET die eerste 30 vir die sessie.
+  quizSet = allQuestions
+    .map(q => ({...q, userChoice: null}))
+    .sort(() => Math.random() - 0.5)
+    .slice(0, MAX_QUESTIONS_PER_SESSION);
+    
+  currentQIdx = 0;
+  isLocked = false;
+  updateHUD();
+  showView('quiz');
+  renderQuestion();
+}
+
+function updateHUD() {
+  document.getElementById('qPosTracker').textContent = `${currentQIdx + 1} / ${quizSet.length}`;
+  document.getElementById('progressBar').style.width = `${(currentQIdx / quizSet.length) * 100}%`;
+}
+
+function renderQuestion() {
+  isLocked = false;
+  const item = quizSet[currentQIdx];
+  updateHUD();
+
+  document.getElementById('catTag').textContent = item.cat;
+  document.getElementById('qPrompt').textContent = item.q;
+
+  const grid = document.getElementById('choicesGrid');
+  grid.innerHTML = "";
+
+  item.opts.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-card';
+    btn.textContent = choice;
+    btn.onclick = () => selectAnswer(idx, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function selectAnswer(chosenIdx, btnElem) {
+  if (isLocked) return;
+  isLocked = true;
+  playSound('click');
+
+  // Visuele aanduiding van die klik, maar geen reg/verkeerd terugvoer nie
+  btnElem.classList.add('selected');
+  quizSet[currentQIdx].userChoice = chosenIdx;
+
+  // Skuif vinnig aan na die volgende vraag
+  setTimeout(() => {
+    currentQIdx++;
+    if (currentQIdx < quizSet.length) {
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }, 250); 
+}
+
+function finishQuiz() {
+  document.getElementById('progressBar').style.width = "100%";
+  
+  let score = 0;
+  let wrongCount = 0;
+  let reviewHTML = '<h3 style="margin-top:0; color:#1e293b; font-size:1.15rem; border-bottom:2px solid #cbd5e1; padding-bottom:8px;">Vrae om weer te oefen:</h3>';
+
+  // Bereken punte en bou die verslag
+  quizSet.forEach((q, idx) => {
+    if (q.userChoice === q.ans) {
+      score++;
+    } else {
+      wrongCount++;
+      const userAnsText = q.userChoice !== null ? q.opts[q.userChoice] : "Niks gekies nie";
+      const correctAnsText = q.opts[q.ans];
+      
+      reviewHTML += `
+        <div class="review-item">
+          <div class="review-q">${idx + 1}. ${q.q}</div>
+          <div class="review-ans-row">
+            <span class="review-wrong">❌ Joune: ${userAnsText}</span>
+            <span class="review-correct">✅ Regte Antwoord: ${correctAnsText}</span>
+          </div>
+        </div>
+      `;
+    }
+  });
+
+  saveScore(score, quizSet.length);
+  document.getElementById('vicScore').textContent = `${score} / ${quizSet.length}`;
+
+  const trophy = document.getElementById('vicTrophy');
+  const title = document.getElementById('vicTitle');
+  const msg = document.getElementById('vicMessage');
+  const reviewContainer = document.getElementById('wrongAnswersReview');
+
+  if (wrongCount > 0) {
+    reviewContainer.innerHTML = reviewHTML;
+    reviewContainer.style.display = 'block';
+  } else {
+    reviewContainer.style.display = 'none';
+  }
+
+  const isPerfect = score === quizSet.length;
+  
+  if (isPerfect) {
+    trophy.textContent = "👑";
+    title.textContent = "VERPLETTEREND!";
+    msg.textContent = "Jy het elke enkele vraag korrek geantwoord!";
+    triggerShatterCelebration();
+  } else if (score >= quizSet.length * 0.7) {
+    trophy.textContent = "🏆";
+    title.textContent = "Mooi So Kampioen!";
+    msg.textContent = "Kyk hier onder na die vrae wat jy gemis het.";
+    playSound('win');
+    showView('victory');
+    launchBalloons();
+  } else {
+    trophy.textContent = "⭐";
+    title.textContent = "Goeie Poging!";
+    msg.textContent = "Kyk mooi na jou foute hier onder en probeer weer!";
+    playSound('win');
+    showView('victory');
+  }
+}
+
+// Text-to-Speech (Lees vir my)
+document.getElementById('readAloudBtn').onclick = () => {
+  const text = quizSet[currentQIdx].q;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'af-ZA';
+  utter.rate = 0.85;
+  window.speechSynthesis.speak(utter);
+};
+
+// Start & Restart Listeners
+document.getElementById('startQuestBtn').onclick = startNewQuiz;
+document.getElementById('retryQuestBtn').onclick = startNewQuiz;
+document.getElementById('bannerCloseBtn').onclick = () => {
+  document.getElementById('shatterBanner').style.display = 'none';
+  showView('victory');
+};
+
+// --- 100% Epic Shatter & Balloon FX ---
+function triggerShatterCelebration() {
+  playSound('shatter');
+  const cont = document.getElementById('mainContainer');
+  cont.classList.add('screen-shake');
+  setTimeout(() => cont.classList.remove('screen-shake'), 900);
+  spawnGlassShards();
+  launchBalloons();
+  setTimeout(() => {
+    playSound('win');
+    document.getElementById('shatterBanner').style.display = 'block';
+  }, 400);
+}
+
+function launchBalloons() {
+  const stage = document.getElementById('balloonStage');
+  stage.innerHTML = '';
+  stage.style.display = 'block';
+
+  const balloonIcons = ['🎈', '🎈', '🎉', '⭐', '🎈', '🏆'];
+  for (let i = 0; i < 30; i++) {
+    const b = document.createElement('div');
+    b.className = 'giant-balloon';
+    b.textContent = balloonIcons[Math.floor(Math.random() * balloonIcons.length)];
+    b.style.left = `${Math.random() * 92}vw`;
+    b.style.animationDuration = `${3.2 + Math.random() * 2.5}s`;
+    b.style.animationDelay = `${Math.random() * 1.2}s`;
+    stage.appendChild(b);
+  }
+  setTimeout(() => { stage.style.display = 'none'; }, 6000);
+}
+
+// --- Canvas Shard Particles Engine ---
+const canvas = document.getElementById('fxCanvas');
+const ctx = canvas.getContext('2d');
+let shards = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function spawnGlassShards() {
+  shards = [];
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  const colors = ['#e0f2fe', '#bae6fd', '#7dd3fc', '#ffffff', '#38bdf8'];
+
+  for (let i = 0; i < 90; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 7 + Math.random() * 18;
+    shards.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 2,
+      rot: Math.random() * Math.PI,
+      vRot: (Math.random() - 0.5) * 0.3,
+      size: 14 + Math.random() * 26,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      life: 1.0
+    });
+  }
+}
+
+function renderFX() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = shards.length - 1; i >= 0; i--) {
+    const s = shards[i];
+    s.x += s.vx;
+    s.y += s.vy;
+    s.vy += 0.35; 
+    s.rot += s.vRot;
+    s.life -= 0.016;
+
+    if (s.life <= 0) { shards.splice(i, 1); continue; }
+
+    ctx.save();
+    ctx.translate(s.x, s.y);
+    ctx.rotate(s.rot);
+    ctx.globalAlpha = Math.max(0, s.life);
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.moveTo(-s.size / 2, -s.size / 2);
+    ctx.lineTo(s.size, -s.size / 4);
+    ctx.lineTo(s.size / 2, s.size / 2);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+  }
+  requestAnimationFrame(renderFX);
+}
+renderFX();
+
+// --- History Rendering ---
+function renderHistory() {
+  const listArea = document.getElementById('historyListArea');
+  const data = getHistory().slice().reverse();
+  listArea.innerHTML = '';
+
+  if (data.length === 0) {
+    listArea.innerHTML = '<p style="color:#94a3b8; padding:24px 0; font-weight:700;">Nog geen toetse voltooi nie. Begin jou eerste een! 🚀</p>';
+    return;
+  }
+
+  data.forEach((r, idx) => {
+    const d = new Date(r.date);
+    const dateFormatted = `${d.getDate()}/${d.getMonth() + 1} — ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    const item = document.createElement('div');
+    const isPerfect = r.pct === 100;
+    const isPass = r.pct >= 70;
+
+    item.className = `history-item ${isPerfect ? 'perfect-item' : (isPass ? 'pass-item' : '')}`;
+    item.innerHTML = `
+      <div class="hist-info">
+        <div class="hist-title">${isPerfect ? '👑 Volpunt' : (isPass ? '⭐ Geslaag' : '📘 Oefening')} (Poging #${data.length - idx})</div>
+        <div class="hist-date">${dateFormatted}</div>
+      </div>
+      <div class="hist-score">${r.score} / ${r.total} <span style="font-size:0.9rem;">(${r.pct}%)</span></div>
+    `;
+    listArea.appendChild(item);
+  });
+}
+
+document.getElementById('clearHistoryBtn').onclick = () => {
+  if (confirm("Wil jy al die vorige tellings uitvee?")) {
+    localStorage.removeItem(STORE_KEY);
+    renderHistory();
+  }
+};
+
+// Default setup
+showView('home');
+</script>
+</body>
+</html>
