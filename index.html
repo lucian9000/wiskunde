@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Vorms en Tyd Avontuur - Graad 2</title>
+<title>Tafels Avontuur - Graad 2</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -164,9 +164,9 @@
 
 <div id="shatterBanner">
   <div style="font-size: 4.5rem;">👑💥</div>
-  <h1 style="margin: 4px 0; font-size: 2.2rem; color: #1e293b;">100% VORMS & TYD BAAS!</h1>
+  <h1 style="margin: 4px 0; font-size: 2.2rem; color: #1e293b;">100% TAFELS BAAS!</h1>
   <p style="font-size: 1.25rem; font-weight: 700; color: #b45309; margin: 6px 0 18px;">
-    Jy het al 30 vrae verpletter met jou slim brein! 🎉
+    Jy het al 130 vrae verpletter met jou slim brein! 🎉
   </p>
   <button class="action-btn btn-restart" id="bannerCloseBtn">Bekyk Resultate 🏆</button>
 </div>
@@ -185,21 +185,21 @@
 
   <!-- HUD -->
   <div class="hud" id="hudBar">
-    <div class="stat-pill"><span style="color:#0ea5e9;">🕒</span> <span>Vorms & Tyd</span></div>
-    <div class="stat-pill"><span>Vraag <span id="qPosTracker">1 / 30</span></span></div>
+    <div class="stat-pill"><span style="color:#0ea5e9;">🕒</span> <span>Tafels</span></div>
+    <div class="stat-pill"><span>Vraag <span id="qPosTracker">1 / 130</span></span></div>
   </div>
 
   <!-- PANEL 1: LANDING PAGE -->
   <div class="view-panel active" id="panelHome">
-    <div class="hero-badge">🧊</div>
-    <h1 class="title-main">Vorms & Tyd Avontuur</h1>
-    <p class="title-sub">Graad 2 Uitdaging (30 Vrae per Sessie)</p>
+    <div class="hero-badge">🧮</div>
+    <h1 class="title-main">Tafels Avontuur</h1>
+    <p class="title-sub">Graad 2 Uitdaging (130 Somme per Sessie)</p>
 
     <div class="feature-box">
-      <div class="feature-item"><span>🔵</span> <strong>2D-Vorms:</strong> Hoeke en Sye (Vierkant, Ovaal ens.)</div>
-      <div class="feature-item"><span>🕒</span> <strong>Tyd:</strong> Horlosies lees en Ure bereken</div>
-      <div class="feature-item"><span>📅</span> <strong>Tyd Feite:</strong> Minute, Dae, Weke, Maande</div>
-      <div class="feature-item"><span>🎲</span> <strong>3D-Voorwerpe:</strong> Rande en Vlakke (Piramides, Kubus)</div>
+      <div class="feature-item"><span>✖️</span> <span><strong>Vermenigvuldiging:</strong> Tafels van 2, 3, 4, 5 en 10</span></div>
+      <div class="feature-item"><span>➗</span> <span><strong>Deling:</strong> Deel deur 2, 3, 4, 5 en 10</span></div>
+      <div class="feature-item"><span>🔢</span> <span><strong>Van 0 tot 12:</strong> Al 130 somme op jou leerblad</span></div>
+      <div class="feature-item"><span>⭐</span> <span><strong>Oefen weer:</strong> Sien jou foute en die regte antwoorde aan die einde</span></div>
     </div>
 
     <button class="action-btn btn-start" id="startQuestBtn">BEGIN DIE TOETS! 🌟</button>
@@ -207,7 +207,7 @@
 
   <!-- PANEL 2: QUIZ PANEL -->
   <div class="view-panel" id="panelQuiz">
-    <div class="category-tag" id="catTag">Tyd</div>
+    <div class="category-tag" id="catTag">Vermenigvuldiging</div>
     
     <div class="visual-container" id="qVisualBox">
       <!-- Image / SVG / Emoji inserted here -->
@@ -225,13 +225,13 @@
   <div class="view-panel" id="panelVictory">
     <div class="hero-badge" id="vicTrophy">🏆</div>
     <h1 class="title-main" id="vicTitle">Klaar!</h1>
-    <p class="title-sub" id="vicScore" style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin: 8px 0;">30 / 30</p>
+    <p class="title-sub" id="vicScore" style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin: 8px 0;">130 / 130</p>
     <p id="vicMessage" style="font-size: 1.15rem; font-weight: 700; color: #475569; margin-bottom: 12px;">Baie geluk met jou harde werk!</p>
 
     <!-- Incorrect Answers Review Container -->
     <div class="review-container" id="wrongAnswersReview"></div>
 
-    <button class="action-btn btn-restart" id="retryQuestBtn" style="margin-top: 20px;">Speel Nuwe Vrae 🔁</button>
+    <button class="action-btn btn-restart" id="retryQuestBtn" style="margin-top: 20px;">Oefen Weer 🔁</button>
   </div>
 
   <!-- PANEL 4: RESULTS HISTORY -->
@@ -279,116 +279,43 @@ function playSound(type) {
   }
 }
 
-// --- Visual Assets (SVGs & Clock Generator) ---
-const SVGS = {
-  circle: `<svg viewBox="0 0 100 100" class="q-visual"><circle cx="50" cy="50" r="40" stroke="#1e293b" stroke-width="4" fill="#bae6fd"/></svg>`,
-  triangle: `<svg viewBox="0 0 100 100" class="q-visual"><polygon points="50,15 90,85 10,85" stroke="#1e293b" stroke-width="4" fill="#fde047" stroke-linejoin="round"/></svg>`,
-  square: `<svg viewBox="0 0 100 100" class="q-visual"><rect x="20" y="20" width="60" height="60" stroke="#1e293b" stroke-width="4" fill="#a7f3d0" stroke-linejoin="round"/></svg>`,
-  rect: `<svg viewBox="0 0 100 100" class="q-visual"><rect x="10" y="30" width="80" height="40" stroke="#1e293b" stroke-width="4" fill="#fecaca" stroke-linejoin="round"/></svg>`,
-  oval: `<svg viewBox="0 0 100 100" class="q-visual"><ellipse cx="50" cy="50" rx="45" ry="25" stroke="#1e293b" stroke-width="4" fill="#e9d5ff"/></svg>`,
-  cube: `<svg viewBox="0 0 100 100" class="q-visual"><path d="M 30 30 L 70 30 L 70 70 L 30 70 Z" fill="#bae6fd" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 30 30 L 45 15 L 85 15 L 70 30" fill="#7dd3fc" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 70 70 L 85 55 L 85 15 L 70 30" fill="#38bdf8" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/></svg>`,
-  cyl: `<svg viewBox="0 0 100 100" class="q-visual"><ellipse cx="50" cy="25" rx="30" ry="10" fill="#fde047" stroke="#1e293b" stroke-width="3"/><path d="M 20 25 L 20 75 A 30 10 0 0 0 80 75 L 80 25" fill="#fef08a" stroke="#1e293b" stroke-width="3"/></svg>`,
-  sphere: `<svg viewBox="0 0 100 100" class="q-visual"><circle cx="50" cy="50" r="40" fill="#a7f3d0" stroke="#1e293b" stroke-width="3"/><ellipse cx="50" cy="50" rx="40" ry="15" fill="none" stroke="#1e293b" stroke-width="3" stroke-dasharray="5,5"/><path d="M 10 50 A 40 15 0 0 0 90 50" fill="none" stroke="#1e293b" stroke-width="3"/></svg>`,
-  cone: `<svg viewBox="0 0 100 100" class="q-visual"><path d="M 50 15 L 20 75 A 30 10 0 0 0 80 75 Z" fill="#fecaca" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><ellipse cx="50" cy="75" rx="30" ry="10" fill="none" stroke="#1e293b" stroke-width="3" stroke-dasharray="5,5"/></svg>`,
-  pyramidSq: `<svg viewBox="0 0 100 100" class="q-visual"><path d="M 50 15 L 15 75 L 60 85 L 85 65 Z" fill="#e9d5ff" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 50 15 L 60 85" fill="none" stroke="#1e293b" stroke-width="3"/><path d="M 50 15 L 85 65" fill="none" stroke="#1e293b" stroke-width="3"/></svg>`,
-  pyramidTri: `<svg viewBox="0 0 100 100" class="q-visual"><path d="M 50 15 L 20 80 L 80 70 Z" fill="#fbcfe8" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 50 15 L 45 85" fill="none" stroke="#1e293b" stroke-width="3"/></svg>`,
-  prismRect: `<svg viewBox="0 0 100 100" class="q-visual"><path d="M 20 40 L 60 40 L 60 70 L 20 70 Z" fill="#c7d2fe" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 20 40 L 40 25 L 80 25 L 60 40" fill="#a5b4fc" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 60 70 L 80 55 L 80 25 L 60 40" fill="#818cf8" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/></svg>`,
-  prismTri: `<svg viewBox="0 0 100 100" class="q-visual"><path d="M 30 70 L 70 70 L 85 40 L 45 40 Z" fill="#fcd34d" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 30 70 L 45 40 L 45 20 Z" fill="#fbbf24" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/><path d="M 70 70 L 85 40 L 45 20 L 30 70" fill="none" stroke="#1e293b" stroke-width="3" stroke-linejoin="round"/></svg>`
-};
-
-function makeClock(h, m) {
-  const hAngle = (h % 12 + m/60) * 30;
-  const mAngle = m * 6;
-  return `<svg viewBox="0 0 100 100" class="q-visual">
-    <circle cx="50" cy="50" r="45" fill="white" stroke="#1e293b" stroke-width="4"/>
-    <!-- Minute Hand -->
-    <line x1="50" y1="50" x2="50" y2="15" stroke="#f43f5e" stroke-width="4" transform="rotate(${mAngle} 50 50)" stroke-linecap="round"/>
-    <!-- Hour Hand -->
-    <line x1="50" y1="50" x2="50" y2="28" stroke="#1e293b" stroke-width="6" transform="rotate(${hAngle} 50 50)" stroke-linecap="round"/>
-    <circle cx="50" cy="50" r="4" fill="#1e293b"/>
-  </svg>`;
+// --- Multiplication and division: every sum from the study sheet ---
+const allQuestions = [];
+for (const table of [2, 3, 4, 5, 10]) {
+  for (let n = 0; n <= 12; n++) {
+    for (const division of [false, true]) {
+      const answer = division ? n : n * table;
+      const choices = new Set([answer]);
+      // Nearby whole-number answers, including zero, without duplicates.
+      for (let offset = 1; choices.size < 4; offset++) {
+        if (answer - offset >= 0) choices.add(answer - offset);
+        if (choices.size < 4) choices.add(answer + offset);
+      }
+      const opts = shuffle([...choices]).map(String);
+      allQuestions.push({
+        cat: division ? 'Deling' : 'Vermenigvuldiging',
+        q: division ? `${n * table} ÷ ${table} = ?` : `${n} × ${table} = ?`,
+        vis: division ? '÷' : '×',
+        opts,
+        ans: opts.indexOf(String(answer))
+      });
+    }
+  }
 }
 
-// --- 50 Vraag Databasis (Insluitend Visuele Voorstelling) ---
-const allQuestions = [
-  // 2D Vorms
-  { cat: "2D-Vorms", q: "Watter vorm het 3 hoeke en reguit sye?", vis: SVGS.triangle, opts: ["Sirkel", "Driehoek", "Vierkant", "Ovaal"], ans: 1 },
-  { cat: "2D-Vorms", q: "Watter vorm het 1 geboë sy en GEEN hoeke nie, en is perfek rond?", vis: SVGS.circle, opts: ["Sirkel", "Driehoek", "Vierkant", "Reghoek"], ans: 0 },
-  { cat: "2D-Vorms", q: "Watter vorm het 4 hoeke en 4 GELYKE sye?", vis: SVGS.square, opts: ["Reghoek", "Ovaal", "Vierkant", "Driehoek"], ans: 2 },
-  { cat: "2D-Vorms", q: "Watter vorm het 2 lang sye, 2 kort sye en 4 hoeke?", vis: SVGS.rect, opts: ["Vierkant", "Sirkel", "Reghoek", "Ovaal"], ans: 2 },
-  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n ovaal?", vis: SVGS.oval, opts: ["1", "4", "2", "GEEN"], ans: 3 },
-  { cat: "2D-Vorms", q: "Hoeveel sye het 'n sirkel?", vis: SVGS.circle, opts: ["1", "3", "4", "0"], ans: 0 },
-  { cat: "2D-Vorms", q: "Het 'n vierkant geboë of reguit sye?", vis: SVGS.square, opts: ["Geboë sye", "Reguit sye", "Albei", "Geen sye nie"], ans: 1 },
-  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n driehoek?", vis: SVGS.triangle, opts: ["1", "2", "3", "4"], ans: 2 },
-  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n reghoek?", vis: SVGS.rect, opts: ["3", "4", "5", "Geen"], ans: 1 },
-  { cat: "2D-Vorms", q: "Watter vorm lyk soos 'n platgedrukte of uitgerekte sirkel?", vis: SVGS.oval, opts: ["Ovaal", "Reghoek", "Vierkant", "Driehoek"], ans: 0 },
-  
-  // Tyd Feite (Gebruik Emojis as Visueel)
-  { cat: "Tyd Feite", q: "Hoeveel minute is daar in 1 uur?", vis: "⏱️", opts: ["30 minute", "60 minute", "12 minute", "24 minute"], ans: 1 },
-  { cat: "Tyd Feite", q: "Hoeveel sekondes is daar in 1 minuut?", vis: "⏲️", opts: ["10 sekondes", "30 sekondes", "60 sekondes", "100 sekondes"], ans: 2 },
-  { cat: "Tyd Feite", q: "Hoeveel ure is daar in 1 dag EN nag saam?", vis: "🌎", opts: ["12 ure", "24 ure", "48 ure", "60 ure"], ans: 1 },
-  { cat: "Tyd Feite", q: "Hoeveel ure is daar net in 1 dag (oggend/middag)?", vis: "☀️", opts: ["6 ure", "12 ure", "24 ure", "8 ure"], ans: 1 },
-  { cat: "Tyd Feite", q: "Hoeveel ure is daar net in 1 nag?", vis: "🌙", opts: ["8 ure", "12 ure", "24 ure", "10 ure"], ans: 1 },
-  { cat: "Tyd Feite", q: "Hoeveel seisoene kry ons in 1 jaar?", vis: "🍂🌸", opts: ["2 seisoene", "3 seisoene", "4 seisoene", "12 seisoene"], ans: 2 },
-  { cat: "Tyd Feite", q: "Hoeveel maande is daar in 1 jaar?", vis: "📅", opts: ["10 maande", "12 maande", "30 maande", "4 maande"], ans: 1 },
-  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 jaar (gewoonlik)?", vis: "📆", opts: ["365 dae", "300 dae", "350 dae", "400 dae"], ans: 0 },
-  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 volle week?", vis: "🗓️", opts: ["5 dae", "6 dae", "7 dae", "10 dae"], ans: 2 },
-  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 skoolweek?", vis: "🏫", opts: ["4 dae", "5 dae", "7 dae", "2 dae"], ans: 1 },
-
-  // Horlosie Lees (SVG Horlosies)
-  { cat: "Horlosie", q: "As die lang wyser by die 12 is, watter tyd wys dit?", vis: makeClock(12, 0), opts: ["Kwart oor", "Half", "Uur (Voluur)", "Kwart voor"], ans: 2 },
-  { cat: "Horlosie", q: "As die lang wyser by die 3 is, watter tyd wys dit?", vis: makeClock(12, 15), opts: ["Kwart oor", "Half", "Kwart voor", "Uur"], ans: 0 },
-  { cat: "Horlosie", q: "As die lang wyser by die 6 is, watter tyd wys dit?", vis: makeClock(1, 30), opts: ["Kwart oor", "Uur", "Kwart voor", "Half"], ans: 3 },
-  { cat: "Horlosie", q: "As die lang wyser by die 9 is, watter tyd wys dit?", vis: makeClock(2, 45), opts: ["Kwart oor", "Half", "Kwart voor", "Uur"], ans: 2 },
-  { cat: "Horlosie", q: "Watter nommer wys 'Half' vir die lang wyser?", vis: makeClock(4, 30), opts: ["12", "3", "6", "9"], ans: 2 },
-  { cat: "Horlosie", q: "Watter nommer wys 'Kwart oor' vir die lang wyser?", vis: makeClock(7, 15), opts: ["12", "3", "6", "9"], ans: 1 },
-
-  // Verloop van Tyd (Berekeninge)
-  { cat: "Tyd Bereken", q: "Hoeveel ure is dit van 7 uur oggend tot 12 uur middag?", vis: "⏰", opts: ["3 ure", "4 ure", "5 ure", "6 ure"], ans: 2 },
-  { cat: "Tyd Bereken", q: "Hoeveel ure is dit van 2 uur middag tot 4 uur middag?", vis: "⏳", opts: ["1 uur", "2 ure", "3 ure", "4 ure"], ans: 1 },
-  { cat: "Tyd Bereken", q: "Hoeveel ure is dit van 2 uur middag tot 8 uur aand?", vis: "🕰️", opts: ["4 ure", "5 ure", "6 ure", "7 ure"], ans: 2 },
-  { cat: "Tyd Bereken", q: "Hoeveel ure is dit van 10 uur oggend tot 12 uur middag?", vis: "⌛", opts: ["2 ure", "3 ure", "4 ure", "1 uur"], ans: 0 },
-  { cat: "Tyd Bereken", q: "As skool 7 uur begin en pouse is 10 uur, hoeveel ure is jy in klas?", vis: "🥪", opts: ["2 ure", "3 ure", "4 ure", "5 ure"], ans: 1 },
-  
-  // 3D Voorwerpe - Hoeke
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n kubus?", vis: SVGS.cube, opts: ["4 hoeke", "6 hoeke", "8 hoeke", "12 hoeke"], ans: 2 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n silinder?", vis: SVGS.cyl, opts: ["2 hoeke", "4 hoeke", "8 hoeke", "Geen hoeke"], ans: 3 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n sfeer?", vis: SVGS.sphere, opts: ["Geen hoeke", "1 hoek", "2 hoeke", "4 hoeke"], ans: 0 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n keël?", vis: SVGS.cone, opts: ["Geen hoeke", "1 hoek", "2 hoeke", "3 hoeke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n vierkantige piramide?", vis: SVGS.pyramidSq, opts: ["4 hoeke", "5 hoeke", "6 hoeke", "8 hoeke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n driehoekige piramide?", vis: SVGS.pyramidTri, opts: ["3 hoeke", "4 hoeke", "5 hoeke", "6 hoeke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n reghoekige prisma?", vis: SVGS.prismRect, opts: ["6 hoeke", "8 hoeke", "10 hoeke", "12 hoeke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n driehoekige prisma?", vis: SVGS.prismTri, opts: ["5 hoeke", "6 hoeke", "8 hoeke", "9 hoeke"], ans: 1 },
-
-  // 3D Voorwerpe - Rande
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n kubus?", vis: SVGS.cube, opts: ["8 rande", "10 rande", "12 rande", "6 rande"], ans: 2 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n reghoekige prisma?", vis: SVGS.prismRect, opts: ["6 rande", "8 rande", "10 rande", "12 rande"], ans: 3 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n silinder?", vis: SVGS.cyl, opts: ["Geen", "1 rand", "2 rande", "3 rande"], ans: 2 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n keël?", vis: SVGS.cone, opts: ["Geen", "1 rand", "2 rande", "3 rande"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n driehoekige prisma?", vis: SVGS.prismTri, opts: ["6 rande", "7 rande", "8 rande", "9 rande"], ans: 3 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n vierkantige piramide?", vis: SVGS.pyramidSq, opts: ["5 rande", "6 rande", "8 rande", "10 rande"], ans: 2 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n driehoekige piramide?", vis: SVGS.pyramidTri, opts: ["4 rande", "5 rande", "6 rande", "8 rande"], ans: 2 },
-
-  // 3D Voorwerpe - Vlakke
-  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n sfeer (soos 'n bal)?", vis: SVGS.sphere, opts: ["Geen", "1 vlak", "2 vlakke", "3 vlakke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n silinder?", vis: SVGS.cyl, opts: ["1 vlak", "2 vlakke", "3 vlakke", "4 vlakke"], ans: 2 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n kubus?", vis: SVGS.cube, opts: ["4 vlakke", "6 vlakke", "8 vlakke", "12 vlakke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n keël?", vis: SVGS.cone, opts: ["1 vlak", "2 vlakke", "3 vlakke", "4 vlakke"], ans: 1 },
-  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n vierkantige piramide?", vis: SVGS.pyramidSq, opts: ["4 vlakke", "5 vlakke", "6 vlakke", "8 vlakke"], ans: 1 },
-
-  // Logika / Ekstra gemeng
-  { cat: "Vorms Gemeng", q: "Watter twee 3D-vorms het albei 8 hoeke en 12 rande?", vis: "🤔", opts: ["Kubus & Silinder", "Kubus & Reghoekige Prisma", "Sfeer & Keël", "Piramides"], ans: 1 },
-  { cat: "2D-Vorms", q: "'n Vierkant het 4 sye. Hoeveel sye het 2 vierkante altesaam?", vis: "🟦🟦", opts: ["4 sye", "6 sye", "8 sye", "10 sye"], ans: 2 },
-  { cat: "3D-Voorwerpe", q: "Watter 2D vorm pas die beste by die vlak van 'n kubus?", vis: SVGS.cube, opts: ["Sirkel", "Driehoek", "Vierkant", "Ovaal"], ans: 2 },
-  { cat: "Tyd Logika", q: "As dit halfpad deur 'n uur is (30 minute), waar staan die lang wyser?", vis: makeClock(9, 30), opts: ["By die 12", "By die 3", "By die 6", "By die 9"], ans: 2 },
-  { cat: "Tyd Logika", q: "As jy 8 uur gaan slaap en 7 uur opstaan, was dit gedurende die dag of nag?", vis: "🛏️", opts: ["Die dag", "Die nag", "Albei", "Geen"], ans: 1 }
-];
+function shuffle(items) {
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+  return items;
+}
 
 // --- State Management ---
 let quizSet = [];
 let currentQIdx = 0;
 let isLocked = false;
-const MAX_QUESTIONS_PER_SESSION = 30;
+const MAX_QUESTIONS_PER_SESSION = allQuestions.length;
 
 const STORE_KEY = "wiskunde_avontuur_scores_v4_visueel";
 
@@ -437,9 +364,7 @@ document.getElementById('tabHistBtn').onclick = () => showView('history');
 
 // --- Quiz Logic ---
 function startNewQuiz() {
-  quizSet = allQuestions
-    .map(q => ({...q, userChoice: null}))
-    .sort(() => Math.random() - 0.5)
+  quizSet = shuffle(allQuestions.map(q => ({...q, userChoice: null})))
     .slice(0, MAX_QUESTIONS_PER_SESSION);
     
   currentQIdx = 0; isLocked = false;
@@ -534,7 +459,7 @@ function finishQuiz() {
 
 // Text-to-Speech (Lees vir my)
 document.getElementById('readAloudBtn').onclick = () => {
-  const utter = new SpeechSynthesisUtterance(quizSet[currentQIdx].q);
+  const utter = new SpeechSynthesisUtterance(quizSet[currentQIdx].q.replace('×', 'maal').replace('÷', 'gedeel deur').replace('= ?', 'is gelyk aan hoeveel?'));
   utter.lang = 'af-ZA'; utter.rate = 0.85; window.speechSynthesis.speak(utter);
 };
 
