@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Tafels Avontuur - Graad 2</title>
+<title>Wiskunde Avontuur - Graad 2</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -164,9 +164,9 @@
 
 <div id="shatterBanner">
   <div style="font-size: 4.5rem;">👑💥</div>
-  <h1 style="margin: 4px 0; font-size: 2.2rem; color: #1e293b;">100% TAFELS BAAS!</h1>
+  <h1 style="margin: 4px 0; font-size: 2.2rem; color: #1e293b;">100% WISKUNDE BAAS!</h1>
   <p style="font-size: 1.25rem; font-weight: 700; color: #b45309; margin: 6px 0 18px;">
-    Jy het al 130 vrae verpletter met jou slim brein! 🎉
+    Jy het al 20 vrae verpletter met jou slim brein! 🎉
   </p>
   <button class="action-btn btn-restart" id="bannerCloseBtn">Bekyk Resultate 🏆</button>
 </div>
@@ -185,21 +185,30 @@
 
   <!-- HUD -->
   <div class="hud" id="hudBar">
-    <div class="stat-pill"><span style="color:#0ea5e9;">🕒</span> <span>Tafels</span></div>
-    <div class="stat-pill"><span>Vraag <span id="qPosTracker">1 / 130</span></span></div>
+    <div class="stat-pill"><span style="color:#0ea5e9;">🕒</span> <span id="subjectTracker">Gemeng</span></div>
+    <div class="stat-pill"><span>Vraag <span id="qPosTracker">1 / 20</span></span></div>
   </div>
 
   <!-- PANEL 1: LANDING PAGE -->
   <div class="view-panel active" id="panelHome">
     <div class="hero-badge">🧮</div>
-    <h1 class="title-main">Tafels Avontuur</h1>
-    <p class="title-sub">Graad 2 Uitdaging (130 Somme per Sessie)</p>
+    <h1 class="title-main">Wiskunde Avontuur</h1>
+    <p class="title-sub">Graad 2 • 20 vrae per rondte</p>
 
     <div class="feature-box">
-      <div class="feature-item"><span>✖️</span> <span><strong>Vermenigvuldiging:</strong> Tafels van 2, 3, 4, 5 en 10</span></div>
-      <div class="feature-item"><span>➗</span> <span><strong>Deling:</strong> Deel deur 2, 3, 4, 5 en 10</span></div>
-      <div class="feature-item"><span>🔢</span> <span><strong>Van 0 tot 12:</strong> Al 130 somme op jou leerblad</span></div>
-      <div class="feature-item"><span>⭐</span> <span><strong>Oefen weer:</strong> Sien jou foute en die regte antwoorde aan die einde</span></div>
+      <label for="subjectSelect" style="display:block;font-weight:700;margin-bottom:8px;">Wat wil jy oefen?</label>
+      <select id="subjectSelect" aria-describedby="subjectHelp" style="width:100%;padding:12px;border:3px solid #1e293b;border-radius:12px;background:white;color:#1e293b;font-size:1.15rem;">
+        <option value="gemeng">Gemeng — alles saam</option>
+        <option value="vorms">Vorms</option>
+        <option value="maal">Maal</option>
+        <option value="deel">Deel</option>
+        <option value="tyd">Tyd</option>
+      </select>
+      <p id="subjectHelp" style="font-size:0.95rem;line-height:1.5;margin:12px 0;">Gemeng: 5 vrae elk oor Vorms, Maal, Deel en Tyd.</p>
+      <div class="feature-item">🔷 Vorms: 2D-vorms en 3D-voorwerpe</div>
+      <div class="feature-item">✖️ Maal en Deel: tafels van 2, 3, 4, 5 en 10</div>
+      <div class="feature-item">🕒 Tyd: feite, horlosies en verloop van tyd</div>
+      <p style="font-size:0.95rem;line-height:1.5;margin:12px 0 0;">Elke rondte het 20 vrae. Ons werk deur elke onderwerp se vrae voordat dit herhaal. Sien jou foute en die regte antwoorde aan die einde.</p>
     </div>
 
     <button class="action-btn btn-start" id="startQuestBtn">BEGIN DIE TOETS! 🌟</button>
@@ -208,7 +217,7 @@
   <!-- PANEL 2: QUIZ PANEL -->
   <div class="view-panel" id="panelQuiz">
     <div class="category-tag" id="catTag">Vermenigvuldiging</div>
-    
+
     <div class="visual-container" id="qVisualBox">
       <!-- Image / SVG / Emoji inserted here -->
     </div>
@@ -225,20 +234,20 @@
   <div class="view-panel" id="panelVictory">
     <div class="hero-badge" id="vicTrophy">🏆</div>
     <h1 class="title-main" id="vicTitle">Klaar!</h1>
-    <p class="title-sub" id="vicScore" style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin: 8px 0;">130 / 130</p>
+    <p class="title-sub" id="vicScore" style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin: 8px 0;">20 / 20</p>
     <p id="vicMessage" style="font-size: 1.15rem; font-weight: 700; color: #475569; margin-bottom: 12px;">Baie geluk met jou harde werk!</p>
 
     <!-- Incorrect Answers Review Container -->
     <div class="review-container" id="wrongAnswersReview"></div>
 
-    <button class="action-btn btn-restart" id="retryQuestBtn" style="margin-top: 20px;">Oefen Weer 🔁</button>
+    <button class="action-btn btn-restart" id="retryQuestBtn" style="margin-top: 20px;">Volgende 20 Vrae 🔁</button>
   </div>
 
   <!-- PANEL 4: RESULTS HISTORY -->
   <div class="view-panel" id="panelHistory">
     <h2 class="title-main" style="font-size: 1.5rem;">📊 Vorige Resultate</h2>
     <p class="title-sub">Al jou toetse wat op hierdie toestel voltooi is</p>
-    
+
     <div class="history-list" id="historyListArea"></div>
 
     <button class="action-btn btn-clear" id="clearHistoryBtn">Maak Skoon 🗑️</button>
@@ -311,11 +320,206 @@ function shuffle(items) {
   return items;
 }
 
+
+// Reused from the original shapes/time quiz in this repository.
+allQuestions.push(...[
+  // 2D Vorms
+  { cat: "2D-Vorms", q: "Watter vorm het 3 hoeke en reguit sye?", opts: ["Sirkel", "Driehoek", "Vierkant", "Ovaal"], ans: 1 },
+  { cat: "2D-Vorms", q: "Watter vorm het 1 geboë sy en GEEN hoeke nie, en is perfek rond?", opts: ["Sirkel", "Driehoek", "Vierkant", "Reghoek"], ans: 0 },
+  { cat: "2D-Vorms", q: "Watter vorm het 4 hoeke en 4 GELYKE sye?", opts: ["Reghoek", "Ovaal", "Vierkant", "Driehoek"], ans: 2 },
+  { cat: "2D-Vorms", q: "Watter vorm het 2 lang sye, 2 kort sye en 4 hoeke?", opts: ["Vierkant", "Sirkel", "Reghoek", "Ovaal"], ans: 2 },
+  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n ovaal?", opts: ["1", "4", "2", "GEEN"], ans: 3 },
+  { cat: "2D-Vorms", q: "Hoeveel sye het 'n sirkel?", opts: ["1", "3", "4", "0"], ans: 0 },
+  { cat: "2D-Vorms", q: "Het 'n vierkant geboë of reguit sye?", opts: ["Geboë sye", "Reguit sye", "Albei", "Geen sye nie"], ans: 1 },
+  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n driehoek?", opts: ["1", "2", "3", "4"], ans: 2 },
+  { cat: "2D-Vorms", q: "Hoeveel hoeke het 'n reghoek?", opts: ["3", "4", "5", "Geen"], ans: 1 },
+  { cat: "2D-Vorms", q: "Watter vorm lyk soos 'n platgedrukte of uitgerekte sirkel?", opts: ["Ovaal", "Reghoek", "Vierkant", "Driehoek"], ans: 0 },
+
+  // Tyd Feite
+  { cat: "Tyd Feite", q: "Hoeveel minute is daar in 1 uur?", opts: ["30 minute", "60 minute", "12 minute", "24 minute"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel sekondes is daar in 1 minuut?", opts: ["10 sekondes", "30 sekondes", "60 sekondes", "100 sekondes"], ans: 2 },
+  { cat: "Tyd Feite", q: "Hoeveel ure is daar in 1 dag EN nag saam?", opts: ["12 ure", "24 ure", "48 ure", "60 ure"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel ure is daar net in 1 dag (oggend/middag)?", opts: ["6 ure", "12 ure", "24 ure", "8 ure"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel ure is daar net in 1 nag?", opts: ["8 ure", "12 ure", "24 ure", "10 ure"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel seisoene kry ons in 1 jaar?", opts: ["2 seisoene", "3 seisoene", "4 seisoene", "12 seisoene"], ans: 2 },
+  { cat: "Tyd Feite", q: "Hoeveel maande is daar in 1 jaar?", opts: ["10 maande", "12 maande", "30 maande", "4 maande"], ans: 1 },
+  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 jaar (gewoonlik)?", opts: ["365 dae", "300 dae", "350 dae", "400 dae"], ans: 0 },
+  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 volle week?", opts: ["5 dae", "6 dae", "7 dae", "10 dae"], ans: 2 },
+  { cat: "Tyd Feite", q: "Hoeveel dae is daar in 1 skoolweek (Maandag tot Vrydag)?", opts: ["4 dae", "5 dae", "7 dae", "2 dae"], ans: 1 },
+
+  // Horlosie Lees
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 12 is, watter tyd wys dit?", opts: ["Kwart oor", "Half", "Uur (Voluur)", "Kwart voor"], ans: 2 },
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 3 is, watter tyd wys dit?", opts: ["Kwart oor", "Half", "Kwart voor", "Uur"], ans: 0 },
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 6 is, watter tyd wys dit?", opts: ["Kwart oor", "Uur", "Kwart voor", "Half"], ans: 3 },
+  { cat: "Tyd op die Horlosie", q: "As die lang wyser by die 9 is, watter tyd wys dit?", opts: ["Kwart oor", "Half", "Kwart voor", "Uur"], ans: 2 },
+  { cat: "Tyd op die Horlosie", q: "Watter nommer wys 'Half' vir die lang wyser?", opts: ["12", "3", "6", "9"], ans: 2 },
+  { cat: "Tyd op die Horlosie", q: "Watter nommer wys 'Kwart oor' vir die lang wyser?", opts: ["12", "3", "6", "9"], ans: 1 },
+
+  // Verloop van Tyd (Berekeninge)
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 7 uur die oggend tot 12 uur die middag?", opts: ["3 ure", "4 ure", "5 ure", "6 ure"], ans: 2 },
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 2 uur die middag tot 4 uur in die middag?", opts: ["1 uur", "2 ure", "3 ure", "4 ure"], ans: 1 },
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 2 uur die middag tot 8 uur die aand?", opts: ["4 ure", "5 ure", "6 ure", "7 ure"], ans: 2 },
+  { cat: "Verloop van Tyd", q: "Hoeveel ure is dit van 10 uur die oggend tot 12 uur middag?", opts: ["2 ure", "3 ure", "4 ure", "1 uur"], ans: 0 },
+  { cat: "Verloop van Tyd", q: "As skool 7 uur begin en pouse is 10 uur, hoeveel ure is jy in die klas?", opts: ["2 ure", "3 ure", "4 ure", "5 ure"], ans: 1 },
+
+  // 3D Voorwerpe - Hoeke
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n kubus?", opts: ["4 hoeke", "6 hoeke", "8 hoeke", "12 hoeke"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n silinder?", opts: ["2 hoeke", "4 hoeke", "8 hoeke", "Geen hoeke"], ans: 3 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n sfeer?", opts: ["Geen hoeke", "1 hoek", "2 hoeke", "4 hoeke"], ans: 0 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n keël?", opts: ["Geen hoeke", "1 hoek", "2 hoeke", "3 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n vierkantige piramide?", opts: ["4 hoeke", "5 hoeke", "6 hoeke", "8 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n driehoekige piramide?", opts: ["3 hoeke", "4 hoeke", "5 hoeke", "6 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n reghoekige prisma?", opts: ["6 hoeke", "8 hoeke", "10 hoeke", "12 hoeke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel hoeke het 'n driehoekige prisma?", opts: ["5 hoeke", "6 hoeke", "8 hoeke", "9 hoeke"], ans: 1 },
+
+  // 3D Voorwerpe - Rande
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n kubus?", opts: ["8 rande", "10 rande", "12 rande", "6 rande"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n reghoekige prisma?", opts: ["6 rande", "8 rande", "10 rande", "12 rande"], ans: 3 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n silinder?", opts: ["Geen", "1 rand", "2 rande", "3 rande"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n keël?", opts: ["Geen", "1 rand", "2 rande", "3 rande"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n driehoekige prisma?", opts: ["6 rande", "7 rande", "8 rande", "9 rande"], ans: 3 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n vierkantige piramide?", opts: ["5 rande", "6 rande", "8 rande", "10 rande"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel rande het 'n driehoekige piramide?", opts: ["4 rande", "5 rande", "6 rande", "8 rande"], ans: 2 },
+
+  // 3D Voorwerpe - Vlakke
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n sfeer (soos 'n bal)?", opts: ["Geen", "1 vlak", "2 vlakke", "3 vlakke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n silinder?", opts: ["1 vlak", "2 vlakke", "3 vlakke", "4 vlakke"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n kubus (soos 'n dobbelsteen)?", opts: ["4 vlakke", "6 vlakke", "8 vlakke", "12 vlakke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n keël (soos 'n roomyshorinkie)?", opts: ["1 vlak", "2 vlakke", "3 vlakke", "4 vlakke"], ans: 1 },
+  { cat: "3D-Voorwerpe", q: "Hoeveel vlakke het 'n vierkantige piramide?", opts: ["4 vlakke", "5 vlakke", "6 vlakke", "8 vlakke"], ans: 1 },
+
+  // Logika / Ekstra gemeng
+  { cat: "2D en 3D Gemeng", q: "Watter twee 3D-vorms het albei 8 hoeke en 12 rande?", opts: ["Kubus & Silinder", "Kubus & Reghoekige Prisma", "Sfeer & Keël", "Piramides"], ans: 1 },
+  { cat: "2D-Vorms", q: "'n Vierkant het 4 sye. Hoeveel sye het 2 vierkante altesaam?", opts: ["4 sye", "6 sye", "8 sye", "10 sye"], ans: 2 },
+  { cat: "3D-Voorwerpe", q: "Watter 2D vorm pas die beste by die vlak van 'n kubus?", opts: ["Sirkel", "Driehoek", "Vierkant", "Ovaal"], ans: 2 },
+  { cat: "Tyd Logika", q: "As dit halfpad deur 'n uur is (30 minute is verby), waar staan die lang wyser?", opts: ["By die 12", "By die 3", "By die 6", "By die 9"], ans: 2 },
+  { cat: "Verloop van Tyd", q: "As jy 8 uur gaan slaap en 7 uur opstaan in die oggend, was dit die dag of die nag?", opts: ["Die dag", "Die nag", "Albei", "Geen"], ans: 1 }
+]);
+// Visuals follow the shapes and school conventions on the supplied study sheets.
+function shapeSVG(name) {
+  const drawings = {
+    sirkel: '<circle cx="50" cy="50" r="36"/>',
+    ovaal: '<ellipse cx="50" cy="50" rx="43" ry="26"/>',
+    driehoek: '<path d="M50 12 90 85 10 85Z"/>',
+    vierkant: '<rect x="18" y="18" width="64" height="64"/>',
+    reghoek: '<rect x="8" y="28" width="84" height="44"/>',
+    kubus: '<path d="M12 30 62 30 62 85 12 85Z M12 30 35 12 85 12 62 30 M62 85 85 65 85 12"/><path d="M12 85 35 65 85 65 M35 65 35 12" fill="none" stroke-dasharray="4 4"/>',
+    silinder: '<path d="M20 24V76 A30 12 0 0 0 80 76V24"/><ellipse cx="50" cy="24" rx="30" ry="12"/><path d="M20 76 A30 12 0 0 1 80 76" fill="none" stroke-dasharray="4 4"/>',
+    sfeer: '<circle cx="50" cy="50" r="38"/><ellipse cx="50" cy="50" rx="38" ry="12" fill="none" stroke-dasharray="4 4"/>',
+    'keël': '<path d="M50 10 15 78 A35 10 0 0 0 85 78Z"/><path d="M15 78 A35 10 0 0 1 85 78" fill="none" stroke-dasharray="4 4"/>',
+    'vierkantige piramide': '<path d="M50 10 10 70 48 90 90 65Z M50 10 48 90"/><path d="M10 70 50 50 90 65 M50 10V50" fill="none" stroke-dasharray="4 4"/>',
+    'driehoekige piramide': '<path d="M50 10 10 78 55 90 90 70Z M50 10 55 90"/><path d="M10 78 90 70" fill="none" stroke-dasharray="4 4"/>',
+    'reghoekige prisma': '<path d="M8 40 66 40 66 80 8 80Z M8 40 30 20 90 20 66 40 M66 80 90 60 90 20"/><path d="M8 80 30 60 90 60 M30 60V20" fill="none" stroke-dasharray="4 4"/>',
+    'driehoekige prisma': '<path d="M10 80 35 30 60 80Z M35 30 65 12 92 62 60 80 M65 12 92 62"/><path d="M10 80 40 62 92 62 M40 62 65 12" fill="none" stroke-dasharray="4 4"/>'
+  };
+  return `<svg viewBox="0 0 100 100" class="q-visual" role="img" aria-label="Vorm"><g fill="#bae6fd" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round">${drawings[name]}</g></svg>`;
+}
+function makeClock(hour, minute) {
+  let numbers = '';
+  for (let n = 1; n <= 12; n++) {
+    const a = n * Math.PI / 6;
+    numbers += `<text x="${50 + 35 * Math.sin(a)}" y="${50 - 35 * Math.cos(a)}" text-anchor="middle" dominant-baseline="central" font-size="9" fill="#1e293b">${n}</text>`;
+  }
+  return `<svg viewBox="0 0 100 100" class="q-visual" role="img" aria-label="Horlosie"><circle cx="50" cy="50" r="47" fill="white" stroke="#1e293b" stroke-width="3"/>${numbers}<line x1="50" y1="50" x2="50" y2="26" stroke="#1e293b" stroke-width="4" stroke-linecap="round" transform="rotate(${(hour % 12) * 30 + minute / 2} 50 50)"/><line x1="50" y1="50" x2="50" y2="18" stroke="#e11d48" stroke-width="2.5" stroke-linecap="round" transform="rotate(${minute * 6} 50 50)"/><circle cx="50" cy="50" r="3" fill="#1e293b"/></svg>`;
+}
+function addQuestion(subject, cat, q, answer, wrong, vis) {
+  if (allQuestions.some(item => item.q === q)) return;
+  const opts = [String(answer), ...wrong.map(String)];
+  allQuestions.push({ subject, cat, q, opts, ans: 0, vis });
+}
+function addNumber(subject, cat, q, answer, vis) {
+  const opts = new Set([answer]);
+  for (let i = 1; opts.size < 4; i++) {
+    if (answer - i >= 0) opts.add(answer - i);
+    if (opts.size < 4) opts.add(answer + i);
+  }
+  addQuestion(subject, cat, q, answer, [...opts].slice(1), vis);
+}
+const solidFacts = {
+  'driehoekige piramide': [4, 6, 4], 'vierkantige piramide': [5, 8, 5],
+  kubus: [8, 12, 6], silinder: [0, 2, 3], sfeer: [0, 0, 1],
+  'keël': [1, 1, 2], 'reghoekige prisma': [8, 12, 6], 'driehoekige prisma': [6, 9, 5]
+};
+for (const [name, counts] of Object.entries(solidFacts)) {
+  ['hoeke', 'rande', 'vlakke'].forEach((property, i) => {
+    if (!allQuestions.some(q => q.q.startsWith(`Hoeveel ${property} het 'n ${name}`))) {
+      addNumber('vorms', '3D-Voorwerpe', `Hoeveel ${property} het 'n ${name}?`, counts[i], shapeSVG(name));
+    }
+  });
+}
+const flatFacts = { sirkel: [0, 1], driehoek: [3, 3], vierkant: [4, 4], reghoek: [4, 4], ovaal: [0, 1] };
+for (const [name, counts] of Object.entries(flatFacts)) {
+  ['hoeke', 'sye'].forEach((property, i) => {
+    const q = `Hoeveel ${property} het 'n ${name}?`;
+    addNumber('vorms', '2D-Vorms', q, counts[i], shapeSVG(name));
+  });
+  const curved = ['sirkel', 'ovaal'].includes(name);
+  addQuestion('vorms', '2D-Vorms', `Watter soort sye het 'n ${name}?`, curved ? 'Geboë sye' : 'Reguit sye', [curved ? 'Reguit sye' : 'Geboë sye', 'Geen sye nie', 'Geboë én reguit sye'], shapeSVG(name));
+}
+addQuestion('vorms', '2D-Vorms', "Hoe lyk die vier sye van 'n vierkant?", 'Al vier is ewe lank', ['Twee lank en twee kort', 'Al vier is geboë', 'Drie lank en een kort'], shapeSVG('vierkant'));
+addQuestion('vorms', '2D-Vorms', "Hoe lyk die sye van 'n reghoek op jou leerblad?", 'Twee lank en twee kort', ['Al vier is geboë', 'Net drie reguit sye', 'Geen sye nie'], shapeSVG('reghoek'));
+addQuestion('vorms', '3D-Voorwerpe', "Watter voorwerp lyk soos 'n bal?", 'Sfeer', ['Kubus', 'Keël', 'Silinder'], shapeSVG('sfeer'));
+addQuestion('vorms', '3D-Voorwerpe', "Watter voorwerp lyk soos 'n koeldrankblikkie?", 'Silinder', ['Kubus', 'Sfeer', 'Vierkantige piramide'], shapeSVG('silinder'));
+for (const n of [2, 3, 4]) {
+  addNumber('vorms', '2D-Vorms', `Hoeveel hoeke het ${n} driehoeke altesaam?`, n * 3, shapeSVG('driehoek'));
+}
+// Reword the school model so twelve hours is not presented as a universal daylight fact.
+for (const q of allQuestions) {
+  if (q.q === 'Hoeveel ure is daar net in 1 dag (oggend/middag)?') q.q = 'Volgens jou leerblad se model: hoeveel ure is die daggedeelte?';
+  if (q.q === 'Hoeveel ure is daar net in 1 nag?') q.q = 'Volgens jou leerblad se model: hoeveel ure is die naggedeelte?';
+}
+function clockWords(h, m) {
+  if (m === 0) return `${h} uur`;
+  if (m === 15) return `Kwart oor ${h}`;
+  if (m === 30) return `Half ${h % 12 + 1}`;
+  return `Kwart voor ${h % 12 + 1}`;
+}
+for (let h = 1; h <= 12; h++) {
+  for (const m of [0, 15, 30, 45]) {
+    const answer = clockWords(h, m);
+    addQuestion('tyd', 'Lees die Horlosie', `Hoe laat is dit op hierdie horlosie? (${h}:${String(m).padStart(2, '0')})`, answer,
+      [clockWords(h % 12 + 1, m), clockWords(h, (m + 15) % 60), clockWords(h, (m + 30) % 60)], makeClock(h, m));
+    // ID keeps the time, but the visible prompt must not give away the clock answer.
+    allQuestions[allQuestions.length - 1].displayQ = 'Hoe laat is dit op hierdie horlosie?';
+  }
+}
+for (const [q, answer] of [
+  ['Op jou leerblad: hoe laat het die seun opgestaan?', 7],
+  ['Op jou leerblad: hoe laat was pouse?', 12],
+  ['Op jou leerblad: hoe laat het die seun huis toe gegaan?', 2],
+  ['Op jou leerblad: hoe laat het hulle huiswerk gedoen?', 4],
+  ['Op jou leerblad: hoe laat het die seun gaan slaap?', 8]
+]) addQuestion('tyd', 'My Dag', q, `${answer} uur`, [1, 3, 6].map(n => `${n} uur`), '📖');
+for (const [start, end] of [[8,10],[9,12],[1,5],[3,6],[2,7],[6,9],[7,11],[10,11]]) {
+  addNumber('tyd', 'Verloop van Tyd', `Hoeveel ure verloop van ${start} uur tot ${end} uur op dieselfde dag?`, end - start, '⏳');
+}
+for (const [q, answer, vis] of [
+  ['Hoeveel minute is daar in 2 ure?', 120, '⏱️'],
+  ['Hoeveel minute is daar in ' + "'n halfuur?", 30, '⏱️'],
+  ['Hoeveel minute is daar in ' + "'n kwartier?", 15, '⏱️'],
+  ['Hoeveel dae is daar in 2 weke?', 14, '📅'],
+  ['Hoeveel maande is daar in ' + "'n halfjaar?", 6, '📅'],
+  ['Hoeveel sekondes is daar in 2 minute?', 120, '⏱️']
+]) addNumber('tyd', 'Tyd Feite', q, answer, vis);
+for (const q of allQuestions) {
+  q.subject ||= q.cat === 'Deling' ? 'deel' : q.cat === 'Vermenigvuldiging' ? 'maal' : /Vorm|Voorwerp|3D/.test(q.cat) ? 'vorms' : 'tyd';
+  q.id = `${q.subject}:${q.q}`;
+  if (!q.vis) {
+    const name = [...Object.keys(solidFacts), ...Object.keys(flatFacts)].find(name => q.q.toLowerCase().includes(name));
+    q.vis = name ? shapeSVG(name) : q.subject === 'vorms' ? '🔷' : '🕒';
+    if (/lang wyser/.test(q.q)) {
+      const minute = /by die 3|'Kwart oor'/.test(q.q) ? 15 : /by die 6|'Half'|halfpad/.test(q.q) ? 30 : /by die 9/.test(q.q) ? 45 : 0;
+      q.vis = makeClock(2, minute);
+    }
+  }
+}
+
+
 // --- State Management ---
 let quizSet = [];
 let currentQIdx = 0;
 let isLocked = false;
-const MAX_QUESTIONS_PER_SESSION = allQuestions.length;
+const MAX_QUESTIONS_PER_SESSION = 20;
 
 const STORE_KEY = "wiskunde_avontuur_scores_v4_visueel";
 
@@ -325,7 +529,7 @@ function getHistory() {
 function saveScore(got, total) {
   try {
     const hist = getHistory();
-    hist.push({ date: new Date().toISOString(), score: got, total: total, pct: Math.round((got / total) * 100) });
+    hist.push({ date: new Date().toISOString(), score: got, total: total, pct: Math.round((got / total) * 100), subject: activeSubject });
     localStorage.setItem(STORE_KEY, JSON.stringify(hist));
   } catch (e) {}
 }
@@ -355,6 +559,11 @@ function showView(viewId) {
   }
 }
 
+document.getElementById('subjectSelect').onchange = () => {
+  const subject = document.getElementById('subjectSelect').value;
+  document.getElementById('subjectHelp').textContent = subject === 'gemeng' ? 'Gemeng: 5 vrae elk oor Vorms, Maal, Deel en Tyd.' : `20 vrae oor ${SUBJECTS[subject]}. Druk BEGIN om 'n nuwe rondte te begin.`;
+};
+
 document.getElementById('tabHomeBtn').onclick = () => showView('home');
 document.getElementById('tabPlayBtn').onclick = () => {
   if (quizSet.length === 0 || currentQIdx >= quizSet.length) startNewQuiz();
@@ -363,11 +572,54 @@ document.getElementById('tabPlayBtn').onclick = () => {
 document.getElementById('tabHistBtn').onclick = () => showView('history');
 
 // --- Quiz Logic ---
+const SUBJECTS = { gemeng: 'Gemeng', vorms: 'Vorms', maal: 'Maal', deel: 'Deel', tyd: 'Tyd' };
+const ROTATION_KEY = 'wiskunde_rotation_v1';
+let rotation = {};
+try {
+  const saved = JSON.parse(localStorage.getItem(ROTATION_KEY));
+  if (saved && typeof saved === 'object' && !Array.isArray(saved)) rotation = saved;
+} catch (e) {}
+function drawQuestions(subject, count) {
+  const bank = allQuestions.filter(q => q.subject === subject);
+  const byId = new Map(bank.map(q => [q.id, q]));
+  const signature = JSON.stringify(bank.map(q => q.id));
+  let state = rotation[subject];
+  if (!state || state.signature !== signature || !Array.isArray(state.queue) ||
+      new Set(state.queue).size !== state.queue.length || state.queue.some(id => !byId.has(id))) {
+    state = rotation[subject] = { signature, queue: shuffle([...byId.keys()]) };
+  }
+  const selected = [];
+  const used = new Set();
+  while (selected.length < Math.min(count, bank.length)) {
+    if (!state.queue.length) {
+      const fresh = shuffle([...byId.keys()]);
+      // Finish the old cycle first; defer its last questions to avoid a duplicate in this round.
+      state.queue = [...fresh.filter(id => !used.has(id)), ...fresh.filter(id => used.has(id))];
+    }
+    const id = state.queue.shift();
+    used.add(id);
+    selected.push(byId.get(id));
+  }
+  try { localStorage.setItem(ROTATION_KEY, JSON.stringify(rotation)); } catch (e) {}
+  return selected;
+}
+let activeSubject = 'gemeng';
+let roundVersion = 0;
 function startNewQuiz() {
-  quizSet = shuffle(allQuestions.map(q => ({...q, userChoice: null})))
-    .slice(0, MAX_QUESTIONS_PER_SESSION);
-    
+  const requested = document.getElementById('subjectSelect').value;
+  activeSubject = Object.hasOwn(SUBJECTS, requested) ? requested : 'gemeng';
+  roundVersion++;
+  document.getElementById('shatterBanner').style.display = 'none';
+  const questions = activeSubject === 'gemeng'
+    ? ['vorms', 'maal', 'deel', 'tyd'].flatMap(subject => drawQuestions(subject, 5))
+    : drawQuestions(activeSubject, MAX_QUESTIONS_PER_SESSION);
+  quizSet = shuffle(questions.map(q => {
+    const answer = q.opts[q.ans];
+    const opts = shuffle([...q.opts]);
+    return { ...q, opts, ans: opts.indexOf(answer), userChoice: null };
+  }));
   currentQIdx = 0; isLocked = false;
+  document.getElementById('subjectTracker').textContent = SUBJECTS[activeSubject];
   updateHUD(); showView('quiz'); renderQuestion();
 }
 
@@ -382,7 +634,7 @@ function renderQuestion() {
   updateHUD();
 
   document.getElementById('catTag').textContent = item.cat;
-  document.getElementById('qPrompt').textContent = item.q;
+  document.getElementById('qPrompt').textContent = item.displayQ || item.q;
 
   // Voeg die prent of SVG by
   const visBox = document.getElementById('qVisualBox');
@@ -409,11 +661,13 @@ function selectAnswer(chosenIdx, btnElem) {
   btnElem.classList.add('selected');
   quizSet[currentQIdx].userChoice = chosenIdx;
 
+  const version = roundVersion;
   setTimeout(() => {
+    if (version !== roundVersion) return;
     currentQIdx++;
     if (currentQIdx < quizSet.length) renderQuestion();
     else finishQuiz();
-  }, 280); 
+  }, 280);
 }
 
 function finishQuiz() {
@@ -428,7 +682,8 @@ function finishQuiz() {
       const userAns = q.userChoice !== null ? q.opts[q.userChoice] : "Niks gekies nie";
       reviewHTML += `
         <div class="review-item">
-          <div class="review-q">${idx + 1}. ${q.q}</div>
+          <div class="review-q">${idx + 1}. ${q.displayQ || q.q}</div>
+          ${q.displayQ ? `<div class="visual-container">${q.vis}</div>` : ""}
           <div class="review-ans-row">
             <span class="review-wrong">❌ Joune: ${userAns}</span>
             <span class="review-correct">✅ Regte Antwoord: ${q.opts[q.ans]}</span>
@@ -459,7 +714,7 @@ function finishQuiz() {
 
 // Text-to-Speech (Lees vir my)
 document.getElementById('readAloudBtn').onclick = () => {
-  const utter = new SpeechSynthesisUtterance(quizSet[currentQIdx].q.replace('×', 'maal').replace('÷', 'gedeel deur').replace('= ?', 'is gelyk aan hoeveel?'));
+  const utter = new SpeechSynthesisUtterance((quizSet[currentQIdx].displayQ || quizSet[currentQIdx].q).replace('×', 'maal').replace('÷', 'gedeel deur').replace('= ?', 'is gelyk aan hoeveel?'));
   utter.lang = 'af-ZA'; utter.rate = 0.85; window.speechSynthesis.speak(utter);
 };
 
@@ -469,11 +724,12 @@ document.getElementById('retryQuestBtn').onclick = startNewQuiz;
 document.getElementById('bannerCloseBtn').onclick = () => { document.getElementById('shatterBanner').style.display = 'none'; showView('victory'); };
 
 function triggerShatterCelebration() {
+  const version = roundVersion;
   playSound('shatter');
   document.getElementById('mainContainer').classList.add('screen-shake');
   setTimeout(() => document.getElementById('mainContainer').classList.remove('screen-shake'), 900);
   spawnGlassShards(); launchBalloons();
-  setTimeout(() => { playSound('win'); document.getElementById('shatterBanner').style.display = 'block'; }, 400);
+  setTimeout(() => { if (version !== roundVersion) return; playSound('win'); document.getElementById('shatterBanner').style.display = 'block'; }, 400);
 }
 
 function launchBalloons() {
@@ -519,7 +775,7 @@ function renderHistory() {
     const d = new Date(r.date), dateFormatted = `${d.getDate()}/${d.getMonth() + 1} — ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
     const item = document.createElement('div'), isPerfect = r.pct === 100, isPass = r.pct >= 70;
     item.className = `history-item ${isPerfect ? 'perfect-item' : (isPass ? 'pass-item' : '')}`;
-    item.innerHTML = `<div class="hist-info"><div class="hist-title">${isPerfect ? '👑 Volpunt' : (isPass ? '⭐ Geslaag' : '📘 Oefening')} (Poging #${data.length - idx})</div><div class="hist-date">${dateFormatted}</div></div><div class="hist-score">${r.score} / ${r.total} <span style="font-size:0.9rem;">(${r.pct}%)</span></div>`;
+    item.innerHTML = `<div class="hist-info"><div class="hist-title">${isPerfect ? '👑 Volpunt' : (isPass ? '⭐ Geslaag' : '📘 Oefening')} (Poging #${data.length - idx})</div><div class="hist-date">${dateFormatted}${Object.hasOwn(SUBJECTS, r.subject) ? " • " + SUBJECTS[r.subject] : ""}</div></div><div class="hist-score">${r.score} / ${r.total} <span style="font-size:0.9rem;">(${r.pct}%)</span></div>`;
     listArea.appendChild(item);
   });
 }
