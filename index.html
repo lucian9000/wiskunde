@@ -234,6 +234,7 @@
       <button class="audio-read-btn" id="readAloudBtn" title="Lees vir my">🔊</button>
     </div>
 
+    <p id="readAloudStatus" role="status" style="display:none; color:#9f1239; font-weight:600;"></p>
     <div class="choice-grid" id="choicesGrid"></div>
     <div id="answerFeedback" class="answer-feedback" role="status" aria-live="polite" aria-atomic="true" style="display:none;"></div>
     <button id="nextQuestionBtn" class="action-btn btn-start" style="display:none; margin-top:18px;" disabled>Volgende vraag →</button>
@@ -545,6 +546,7 @@ function saveScore(got, total) {
 
 // --- Navigation & View Switching ---
 function showView(viewId) {
+  stopReadAloud();
   document.querySelectorAll('.view-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
 
@@ -638,6 +640,7 @@ function updateHUD() {
 }
 
 function renderQuestion() {
+  stopReadAloud();
   isLocked = false;
   document.getElementById('answerFeedback').style.display = 'none';
   document.getElementById('answerFeedback').textContent = '';
@@ -743,10 +746,289 @@ function finishQuiz() {
   }
 }
 
-// Text-to-Speech (Lees vir my)
-document.getElementById('readAloudBtn').onclick = () => {
-  const utter = new SpeechSynthesisUtterance((quizSet[currentQIdx].displayQ || quizSet[currentQIdx].q).replace('×', 'maal').replace('÷', 'gedeel deur').replace('= ?', 'is gelyk aan hoeveel?'));
-  utter.lang = 'af-ZA'; utter.rate = 0.85; window.speechSynthesis.speak(utter);
+const AFRIKAANS_AUDIO = {
+  "0 maal 2 is gelyk aan hoeveel?": "3e97c398ea1e9d562a54.mp3",
+  "0 gedeel deur 2 is gelyk aan hoeveel?": "01ad4bf67678add2a386.mp3",
+  "1 maal 2 is gelyk aan hoeveel?": "ae098ed06231acc3f884.mp3",
+  "2 gedeel deur 2 is gelyk aan hoeveel?": "a810ac084f79af0d6c2e.mp3",
+  "2 maal 2 is gelyk aan hoeveel?": "24b13b9fae0b665c8b7f.mp3",
+  "4 gedeel deur 2 is gelyk aan hoeveel?": "d66f88cbb94378511791.mp3",
+  "3 maal 2 is gelyk aan hoeveel?": "0ef10c7dcb17289e3762.mp3",
+  "6 gedeel deur 2 is gelyk aan hoeveel?": "09e5daa553a4a08e57c7.mp3",
+  "4 maal 2 is gelyk aan hoeveel?": "fd250fac2e3f4881b1e5.mp3",
+  "8 gedeel deur 2 is gelyk aan hoeveel?": "f63689bf4f804a6f9e50.mp3",
+  "5 maal 2 is gelyk aan hoeveel?": "eedd3f2d8a7b203b9bf0.mp3",
+  "10 gedeel deur 2 is gelyk aan hoeveel?": "79900a1c0be9e01ec4d8.mp3",
+  "6 maal 2 is gelyk aan hoeveel?": "ca6a8c0929b6c2887c8f.mp3",
+  "12 gedeel deur 2 is gelyk aan hoeveel?": "4bdde2cf7dbea471c4ec.mp3",
+  "7 maal 2 is gelyk aan hoeveel?": "a7012f5820e782a8798c.mp3",
+  "14 gedeel deur 2 is gelyk aan hoeveel?": "db5b5cc4a95c6edd06ef.mp3",
+  "8 maal 2 is gelyk aan hoeveel?": "6013e37b84e3c02bf81f.mp3",
+  "16 gedeel deur 2 is gelyk aan hoeveel?": "0e6f3a99e464418fa023.mp3",
+  "9 maal 2 is gelyk aan hoeveel?": "197f542c40df4a96bb57.mp3",
+  "18 gedeel deur 2 is gelyk aan hoeveel?": "70d601a1312ddf999ccc.mp3",
+  "10 maal 2 is gelyk aan hoeveel?": "59df0a23984ac3f88871.mp3",
+  "20 gedeel deur 2 is gelyk aan hoeveel?": "ec30a2ed22aea72f6cb8.mp3",
+  "11 maal 2 is gelyk aan hoeveel?": "5c5c686f1a66458c1a2e.mp3",
+  "22 gedeel deur 2 is gelyk aan hoeveel?": "b69c7d690e48a6ca76a4.mp3",
+  "12 maal 2 is gelyk aan hoeveel?": "772f97ecf3e16439e93b.mp3",
+  "24 gedeel deur 2 is gelyk aan hoeveel?": "3e4095e59ab73791d18b.mp3",
+  "0 maal 3 is gelyk aan hoeveel?": "f6bf806abde2261a9232.mp3",
+  "0 gedeel deur 3 is gelyk aan hoeveel?": "409c029bf7fc06b467de.mp3",
+  "1 maal 3 is gelyk aan hoeveel?": "b62900dc570563d84828.mp3",
+  "3 gedeel deur 3 is gelyk aan hoeveel?": "817cac5af1234aa0b76e.mp3",
+  "2 maal 3 is gelyk aan hoeveel?": "6799984ba833203b8e7f.mp3",
+  "6 gedeel deur 3 is gelyk aan hoeveel?": "0285273f0d3dcbb1f6d4.mp3",
+  "3 maal 3 is gelyk aan hoeveel?": "7542483d13ea792285ec.mp3",
+  "9 gedeel deur 3 is gelyk aan hoeveel?": "c439fff8b6a34bffb1c5.mp3",
+  "4 maal 3 is gelyk aan hoeveel?": "c48fc386b52692bee76d.mp3",
+  "12 gedeel deur 3 is gelyk aan hoeveel?": "ae3eeeb378904ddda6c5.mp3",
+  "5 maal 3 is gelyk aan hoeveel?": "4f5da5c07d8338e19b07.mp3",
+  "15 gedeel deur 3 is gelyk aan hoeveel?": "c059fbcd3fb3d9a6d3af.mp3",
+  "6 maal 3 is gelyk aan hoeveel?": "f14c2c6c3c58f1df6bdb.mp3",
+  "18 gedeel deur 3 is gelyk aan hoeveel?": "e01f95be0c2c6b0bfbce.mp3",
+  "7 maal 3 is gelyk aan hoeveel?": "49fcd933ab997cb26ced.mp3",
+  "21 gedeel deur 3 is gelyk aan hoeveel?": "a77e5f010ffc96aeb638.mp3",
+  "8 maal 3 is gelyk aan hoeveel?": "7a5894b6c25a71c24ded.mp3",
+  "24 gedeel deur 3 is gelyk aan hoeveel?": "a17f27a06daba6514be2.mp3",
+  "9 maal 3 is gelyk aan hoeveel?": "f13e61446c5899500a50.mp3",
+  "27 gedeel deur 3 is gelyk aan hoeveel?": "cf89e7dda936b54b8625.mp3",
+  "10 maal 3 is gelyk aan hoeveel?": "2684fdb564c2dc1ca0c5.mp3",
+  "30 gedeel deur 3 is gelyk aan hoeveel?": "184a216f930b2cc88046.mp3",
+  "11 maal 3 is gelyk aan hoeveel?": "41b00567d7e583fd6946.mp3",
+  "33 gedeel deur 3 is gelyk aan hoeveel?": "8524a04eb6a5397c3ff2.mp3",
+  "12 maal 3 is gelyk aan hoeveel?": "b8caf8dfb417a198bc31.mp3",
+  "36 gedeel deur 3 is gelyk aan hoeveel?": "b48d5d502906190087c9.mp3",
+  "0 maal 4 is gelyk aan hoeveel?": "593010bd62e7d8c24936.mp3",
+  "0 gedeel deur 4 is gelyk aan hoeveel?": "4037b9fcad8e5b85193e.mp3",
+  "1 maal 4 is gelyk aan hoeveel?": "9ea243875e454ddb6f78.mp3",
+  "4 gedeel deur 4 is gelyk aan hoeveel?": "6adda3e3abbc800f78b5.mp3",
+  "2 maal 4 is gelyk aan hoeveel?": "f30b308b27071d697b19.mp3",
+  "8 gedeel deur 4 is gelyk aan hoeveel?": "ae9648e3ac95029e06fb.mp3",
+  "3 maal 4 is gelyk aan hoeveel?": "ea59547d782131c5ccea.mp3",
+  "12 gedeel deur 4 is gelyk aan hoeveel?": "de0fcb45666474aff04f.mp3",
+  "4 maal 4 is gelyk aan hoeveel?": "31723f5fb0cb4f651bce.mp3",
+  "16 gedeel deur 4 is gelyk aan hoeveel?": "56c0ff7fde9e042bad1a.mp3",
+  "5 maal 4 is gelyk aan hoeveel?": "0e924e4b0a2359ca1d61.mp3",
+  "20 gedeel deur 4 is gelyk aan hoeveel?": "5f7a3d484651cfb96039.mp3",
+  "6 maal 4 is gelyk aan hoeveel?": "351677c30d5fb4b2f88c.mp3",
+  "24 gedeel deur 4 is gelyk aan hoeveel?": "8ddc24adf0b645f1a2ae.mp3",
+  "7 maal 4 is gelyk aan hoeveel?": "e2760d70fdab20acfb49.mp3",
+  "28 gedeel deur 4 is gelyk aan hoeveel?": "f1df4b89c39248a9e2fc.mp3",
+  "8 maal 4 is gelyk aan hoeveel?": "7b66c58171de98b80d63.mp3",
+  "32 gedeel deur 4 is gelyk aan hoeveel?": "4f487df96e71930ceaec.mp3",
+  "9 maal 4 is gelyk aan hoeveel?": "d2dd4e1ca7daf14e483d.mp3",
+  "36 gedeel deur 4 is gelyk aan hoeveel?": "a820f947a9d6155817fb.mp3",
+  "10 maal 4 is gelyk aan hoeveel?": "a16ca04ee15fd1582bbb.mp3",
+  "40 gedeel deur 4 is gelyk aan hoeveel?": "f3f65b5d5f2a9accb1f8.mp3",
+  "11 maal 4 is gelyk aan hoeveel?": "a2d9bc8838e7ecac4949.mp3",
+  "44 gedeel deur 4 is gelyk aan hoeveel?": "873ad6d5cf96270385dd.mp3",
+  "12 maal 4 is gelyk aan hoeveel?": "bd450a806b6deab34cdd.mp3",
+  "48 gedeel deur 4 is gelyk aan hoeveel?": "c7933fb8a68b413c1128.mp3",
+  "0 maal 5 is gelyk aan hoeveel?": "5855d3096c682cdc5476.mp3",
+  "0 gedeel deur 5 is gelyk aan hoeveel?": "386429c1f240fd0f05a9.mp3",
+  "1 maal 5 is gelyk aan hoeveel?": "bd1ba42a3b5fdc446570.mp3",
+  "5 gedeel deur 5 is gelyk aan hoeveel?": "411008e97dd429dd6981.mp3",
+  "2 maal 5 is gelyk aan hoeveel?": "bf9366d8187bfc4b2b9b.mp3",
+  "10 gedeel deur 5 is gelyk aan hoeveel?": "3b5d904527a35f8ff3b0.mp3",
+  "3 maal 5 is gelyk aan hoeveel?": "450f262f63222855cada.mp3",
+  "15 gedeel deur 5 is gelyk aan hoeveel?": "e5b4e981f54cc1d96528.mp3",
+  "4 maal 5 is gelyk aan hoeveel?": "a75217d7e351db44fe2f.mp3",
+  "20 gedeel deur 5 is gelyk aan hoeveel?": "81503aedb9b5ccda2c48.mp3",
+  "5 maal 5 is gelyk aan hoeveel?": "5989d565eac449eb9324.mp3",
+  "25 gedeel deur 5 is gelyk aan hoeveel?": "7b0a3ceaf5fe2214208b.mp3",
+  "6 maal 5 is gelyk aan hoeveel?": "4385aac5329b0c71efcb.mp3",
+  "30 gedeel deur 5 is gelyk aan hoeveel?": "b55132a7bae60c4dc734.mp3",
+  "7 maal 5 is gelyk aan hoeveel?": "5e9be373da46cb0e5279.mp3",
+  "35 gedeel deur 5 is gelyk aan hoeveel?": "1bdf9452dd1f29d474e2.mp3",
+  "8 maal 5 is gelyk aan hoeveel?": "8bd107d66ee720eee6dc.mp3",
+  "40 gedeel deur 5 is gelyk aan hoeveel?": "e06416b6c2cfd6ad737c.mp3",
+  "9 maal 5 is gelyk aan hoeveel?": "2694b7393d0ccd8fa1d7.mp3",
+  "45 gedeel deur 5 is gelyk aan hoeveel?": "fcb12dba8ed13253810f.mp3",
+  "10 maal 5 is gelyk aan hoeveel?": "4cb4f7a78ef9950633eb.mp3",
+  "50 gedeel deur 5 is gelyk aan hoeveel?": "ffa7f7be5f59a4696dad.mp3",
+  "11 maal 5 is gelyk aan hoeveel?": "4011f79c056b613a55e7.mp3",
+  "55 gedeel deur 5 is gelyk aan hoeveel?": "9969398e4f2d8e96aef5.mp3",
+  "12 maal 5 is gelyk aan hoeveel?": "63787bf7a5e9129d0a15.mp3",
+  "60 gedeel deur 5 is gelyk aan hoeveel?": "fa69a92fc82c24e143eb.mp3",
+  "0 maal 10 is gelyk aan hoeveel?": "c896c95d751ad762a171.mp3",
+  "0 gedeel deur 10 is gelyk aan hoeveel?": "1f33caa55691ac91d910.mp3",
+  "1 maal 10 is gelyk aan hoeveel?": "3792e81e00cd50288814.mp3",
+  "10 gedeel deur 10 is gelyk aan hoeveel?": "67d9b701ae23b0c483b7.mp3",
+  "2 maal 10 is gelyk aan hoeveel?": "acc4cc3df57722c6bf98.mp3",
+  "20 gedeel deur 10 is gelyk aan hoeveel?": "91580a899420a9440872.mp3",
+  "3 maal 10 is gelyk aan hoeveel?": "320d9ee4b2c240470204.mp3",
+  "30 gedeel deur 10 is gelyk aan hoeveel?": "6fc155a02b6e8c1ee0a0.mp3",
+  "4 maal 10 is gelyk aan hoeveel?": "7325dcd1dea5dec25531.mp3",
+  "40 gedeel deur 10 is gelyk aan hoeveel?": "1fb0d5748758ba5b80a4.mp3",
+  "5 maal 10 is gelyk aan hoeveel?": "cd46abc0dac4f282f147.mp3",
+  "50 gedeel deur 10 is gelyk aan hoeveel?": "e46b86ef1a9332637067.mp3",
+  "6 maal 10 is gelyk aan hoeveel?": "b8977f942bdc10cd5ec0.mp3",
+  "60 gedeel deur 10 is gelyk aan hoeveel?": "8160ce40e828a4c4ae04.mp3",
+  "7 maal 10 is gelyk aan hoeveel?": "ef3c94d51682b6c31e63.mp3",
+  "70 gedeel deur 10 is gelyk aan hoeveel?": "59fa41efd2a9c5aeab4b.mp3",
+  "8 maal 10 is gelyk aan hoeveel?": "956d4d0690848f5cdaea.mp3",
+  "80 gedeel deur 10 is gelyk aan hoeveel?": "bce20f6d717853e5d79c.mp3",
+  "9 maal 10 is gelyk aan hoeveel?": "7fa36505609b498e1a7d.mp3",
+  "90 gedeel deur 10 is gelyk aan hoeveel?": "2311aedd02d438e004ba.mp3",
+  "10 maal 10 is gelyk aan hoeveel?": "773dbdcf69286da9e445.mp3",
+  "100 gedeel deur 10 is gelyk aan hoeveel?": "993bf9090736af5c5bac.mp3",
+  "11 maal 10 is gelyk aan hoeveel?": "857a6b3a5dbf196ea2dd.mp3",
+  "110 gedeel deur 10 is gelyk aan hoeveel?": "060f7b56ae2a53c002e7.mp3",
+  "12 maal 10 is gelyk aan hoeveel?": "f08e2daefac295b151de.mp3",
+  "120 gedeel deur 10 is gelyk aan hoeveel?": "db880a0891bf07278385.mp3",
+  "Watter vorm het 3 hoeke en reguit sye?": "f11b1d810547f82e745d.mp3",
+  "Watter vorm het 1 geboë sy en GEEN hoeke nie, en is perfek rond?": "be9368cde3e66c3caaab.mp3",
+  "Watter vorm het 4 hoeke en 4 GELYKE sye?": "e2a0a283ffaaf6616460.mp3",
+  "Watter vorm het 2 lang sye, 2 kort sye en 4 hoeke?": "c13fb59556ef86c883a8.mp3",
+  "Hoeveel hoeke het 'n ovaal?": "6541f24d188aa8e14499.mp3",
+  "Hoeveel sye het 'n sirkel?": "9fd37789fc46e6c0ed95.mp3",
+  "Het 'n vierkant geboë of reguit sye?": "927a65bfbf46216b4245.mp3",
+  "Hoeveel hoeke het 'n driehoek?": "42078d8030a078b87d04.mp3",
+  "Hoeveel hoeke het 'n reghoek?": "bf827e610683d32c45b1.mp3",
+  "Watter vorm lyk soos 'n platgedrukte of uitgerekte sirkel?": "39d2a41b5308b2c827a4.mp3",
+  "Hoeveel minute is daar in 1 uur?": "13bcad3d79620f684b05.mp3",
+  "Hoeveel sekondes is daar in 1 minuut?": "480902f066cfaaf0fd51.mp3",
+  "Hoeveel ure is daar in 1 dag EN nag saam?": "aec6143b860f8649a2c6.mp3",
+  "Volgens jou leerblad se model: hoeveel ure is die daggedeelte?": "1f1dd5b39a503c4ce5a6.mp3",
+  "Volgens jou leerblad se model: hoeveel ure is die naggedeelte?": "1b13f24a2a41e18746f7.mp3",
+  "Hoeveel seisoene kry ons in 1 jaar?": "d21bf7de23f4d1277c8c.mp3",
+  "Hoeveel maande is daar in 1 jaar?": "c4bc8b6a2c14e2905539.mp3",
+  "Hoeveel dae is daar in 1 jaar (gewoonlik)?": "d9812e7f9062d1f6d60c.mp3",
+  "Hoeveel dae is daar in 1 volle week?": "379396a947e2058ceecd.mp3",
+  "Hoeveel dae is daar in 1 skoolweek (Maandag tot Vrydag)?": "ce06f89e3dfadeb1ad7a.mp3",
+  "As die lang wyser by die 12 is, watter tyd wys dit?": "6e45c4fb778e6f686f50.mp3",
+  "As die lang wyser by die 3 is, watter tyd wys dit?": "e77dd6e3a5fa91adbcd7.mp3",
+  "As die lang wyser by die 6 is, watter tyd wys dit?": "fe0d6b40628eb5c6b738.mp3",
+  "As die lang wyser by die 9 is, watter tyd wys dit?": "f5c3ad45f8226ef8b213.mp3",
+  "Watter nommer wys 'Half' vir die lang wyser?": "a62c6b5cebbd9a794cfb.mp3",
+  "Watter nommer wys 'Kwart oor' vir die lang wyser?": "e00960c268ca487db291.mp3",
+  "Hoeveel ure is dit van 7 uur die oggend tot 12 uur die middag?": "97d7dc4307b919ba0ab8.mp3",
+  "Hoeveel ure is dit van 2 uur die middag tot 4 uur in die middag?": "dd9a7ee3f1d2bc645344.mp3",
+  "Hoeveel ure is dit van 2 uur die middag tot 8 uur die aand?": "c47b33443f708cd22f7c.mp3",
+  "Hoeveel ure is dit van 10 uur die oggend tot 12 uur middag?": "4b2bef8658100add8ae3.mp3",
+  "As skool 7 uur begin en pouse is 10 uur, hoeveel ure is jy in die klas?": "ee344f3c57136fde75c1.mp3",
+  "Hoeveel hoeke het 'n kubus?": "fcac366768ae4f131edd.mp3",
+  "Hoeveel hoeke het 'n silinder?": "e0727003f2505a474810.mp3",
+  "Hoeveel hoeke het 'n sfeer?": "9aed662e38793beacc0f.mp3",
+  "Hoeveel hoeke het 'n keël?": "aba5f0c846d94e742a85.mp3",
+  "Hoeveel hoeke het 'n vierkantige piramide?": "52e9ba86fef25b5c77ec.mp3",
+  "Hoeveel hoeke het 'n driehoekige piramide?": "6d8d6e20485b2c6f9ffa.mp3",
+  "Hoeveel hoeke het 'n reghoekige prisma?": "151682cfacf502f2a359.mp3",
+  "Hoeveel hoeke het 'n driehoekige prisma?": "64ce21d4c982caa1b413.mp3",
+  "Hoeveel rande het 'n kubus?": "97ce181714677c934888.mp3",
+  "Hoeveel rande het 'n reghoekige prisma?": "d50f79bb3e564f1bcdc4.mp3",
+  "Hoeveel rande het 'n silinder?": "fb8c93c3148c511bed73.mp3",
+  "Hoeveel rande het 'n keël?": "2384f4a88241133ed645.mp3",
+  "Hoeveel rande het 'n driehoekige prisma?": "1ae44ab426f40139febb.mp3",
+  "Hoeveel rande het 'n vierkantige piramide?": "c79529f8492a0b4c4557.mp3",
+  "Hoeveel rande het 'n driehoekige piramide?": "dcfe78086384f1c023c1.mp3",
+  "Hoeveel vlakke het 'n sfeer (soos 'n bal)?": "982a0e71a3046f296935.mp3",
+  "Hoeveel vlakke het 'n silinder?": "124ed07bf4d575ed3fae.mp3",
+  "Hoeveel vlakke het 'n kubus (soos 'n dobbelsteen)?": "a33345840659314705be.mp3",
+  "Hoeveel vlakke het 'n keël (soos 'n roomyshorinkie)?": "2fc22cc6c31f2e5985e1.mp3",
+  "Hoeveel vlakke het 'n vierkantige piramide?": "a52026bb53eab78e3087.mp3",
+  "Watter twee drie dimensionele-vorms het albei 8 hoeke en 12 rande?": "4c6c048bbe978ec45d65.mp3",
+  "'n Vierkant het 4 sye. Hoeveel sye het 2 vierkante altesaam?": "f87a698d1a9533b26074.mp3",
+  "Watter twee dimensionele vorm pas die beste by die vlak van 'n kubus?": "71932d8129d8c6cc5dee.mp3",
+  "As dit halfpad deur 'n uur is (30 minute is verby), waar staan die lang wyser?": "f0e5d35e8d92c5849b66.mp3",
+  "As jy 8 uur gaan slaap en 7 uur opstaan in die oggend, was dit die dag of die nag?": "13e3a870b47a08f35d52.mp3",
+  "Hoeveel vlakke het 'n driehoekige piramide?": "ef19ff72258d768579b7.mp3",
+  "Hoeveel rande het 'n sfeer?": "3a2a0b7f60306c95f0a9.mp3",
+  "Hoeveel vlakke het 'n reghoekige prisma?": "c193b27c04a5100939fa.mp3",
+  "Hoeveel vlakke het 'n driehoekige prisma?": "c17123694cc5bd91252c.mp3",
+  "Hoeveel hoeke het 'n sirkel?": "ebd3972fd8cd5d028d4d.mp3",
+  "Watter soort sye het 'n sirkel?": "6cb208d0007af450eae8.mp3",
+  "Hoeveel sye het 'n driehoek?": "ea13a390e491dc594a10.mp3",
+  "Watter soort sye het 'n driehoek?": "51b2c48212350b1db304.mp3",
+  "Hoeveel hoeke het 'n vierkant?": "d767dd20fc22b19e18b5.mp3",
+  "Hoeveel sye het 'n vierkant?": "63073445dd11a9763252.mp3",
+  "Watter soort sye het 'n vierkant?": "ec110c38fefe3ea7b535.mp3",
+  "Hoeveel sye het 'n reghoek?": "fb05766899d2425c56c5.mp3",
+  "Watter soort sye het 'n reghoek?": "7f043aad20f908d642d6.mp3",
+  "Hoeveel sye het 'n ovaal?": "740c9aaf3cb360844cd4.mp3",
+  "Watter soort sye het 'n ovaal?": "7b46205b33c8cf56eef4.mp3",
+  "Hoe lyk die vier sye van 'n vierkant?": "83cfa4aa4a22bc348e5c.mp3",
+  "Hoe lyk die sye van 'n reghoek op jou leerblad?": "ae1d07ff3ecc29bfff71.mp3",
+  "Watter voorwerp lyk soos 'n bal?": "5d23a145e9a9208b82c5.mp3",
+  "Watter voorwerp lyk soos 'n koeldrankblikkie?": "df401143a431ca97498b.mp3",
+  "Hoeveel hoeke het 2 driehoeke altesaam?": "a38256b307acbeedfa81.mp3",
+  "Hoeveel hoeke het 3 driehoeke altesaam?": "da4dc0d2582f8cac7bbd.mp3",
+  "Hoeveel hoeke het 4 driehoeke altesaam?": "21cd41924ba33126ddfe.mp3",
+  "Hoe laat is dit op hierdie horlosie?": "80991e8bc19ed8800feb.mp3",
+  "Op jou leerblad: hoe laat het die seun opgestaan?": "fd1196b279e94622f649.mp3",
+  "Op jou leerblad: hoe laat was pouse?": "212eed49532eb48c6cfb.mp3",
+  "Op jou leerblad: hoe laat het die seun huis toe gegaan?": "833ee542374f6e31099c.mp3",
+  "Op jou leerblad: hoe laat het hulle huiswerk gedoen?": "7f533891fb92f5234c27.mp3",
+  "Op jou leerblad: hoe laat het die seun gaan slaap?": "4b9e55014a8ed44c3cae.mp3",
+  "Hoeveel ure verloop van 8 uur tot 10 uur op dieselfde dag?": "939601a75e4550d024d2.mp3",
+  "Hoeveel ure verloop van 9 uur tot 12 uur op dieselfde dag?": "d0d82c2842ff19c36adc.mp3",
+  "Hoeveel ure verloop van 1 uur tot 5 uur op dieselfde dag?": "67735f80baa51fb2667f.mp3",
+  "Hoeveel ure verloop van 3 uur tot 6 uur op dieselfde dag?": "084d0db59baf0a3d589a.mp3",
+  "Hoeveel ure verloop van 2 uur tot 7 uur op dieselfde dag?": "cdef77e93f7903aac812.mp3",
+  "Hoeveel ure verloop van 6 uur tot 9 uur op dieselfde dag?": "d26d654c94c3b1b2e1b0.mp3",
+  "Hoeveel ure verloop van 7 uur tot 11 uur op dieselfde dag?": "fa5ca7688dbffbb1fe14.mp3",
+  "Hoeveel ure verloop van 10 uur tot 11 uur op dieselfde dag?": "0b45b34cc2732c846c6b.mp3",
+  "Hoeveel minute is daar in 2 ure?": "bde16f8d76e35f4d7f52.mp3",
+  "Hoeveel minute is daar in 'n halfuur?": "abb1d79609ceb3dbb250.mp3",
+  "Hoeveel minute is daar in 'n kwartier?": "bbd30d9b12be0803117a.mp3",
+  "Hoeveel dae is daar in 2 weke?": "f5cacc644f416c369d08.mp3",
+  "Hoeveel maande is daar in 'n halfjaar?": "808920521064269bb36d.mp3",
+  "Hoeveel sekondes is daar in 2 minute?": "101cef9dea6dcaf21c45.mp3"
+};
+// Bundled Afrikaans recordings avoid device-dependent English voice fallback.
+function spokenQuestion(item) {
+  return (item.displayQ || item.q).replaceAll('×', 'maal').replaceAll('÷', 'gedeel deur')
+    .replace('= ?', 'is gelyk aan hoeveel?').replaceAll('2D', 'twee dimensionele').replaceAll('3D', 'drie dimensionele');
+}
+let questionAudio = null;
+let speechVersion = 0;
+function stopReadAloud() {
+  speechVersion++;
+  if (questionAudio) { questionAudio.pause(); questionAudio = null; }
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  const status = document.getElementById('readAloudStatus');
+  status.textContent = '';
+  status.style.display = 'none';
+}
+function readWithAfrikaansVoice(text, version) {
+  if (version !== speechVersion) return;
+  const synth = window.speechSynthesis;
+  const voice = synth && synth.getVoices().find(v => /^af(?:[-_]|$)/i.test(v.lang));
+  if (voice) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.voice = voice;
+    utter.lang = voice.lang;
+    utter.rate = 0.85;
+    synth.speak(utter);
+  } else {
+    const status = document.getElementById('readAloudStatus');
+    status.textContent = 'Afrikaanse klank kon nie laai nie. Kyk na jou internetverbinding en probeer weer.';
+    status.style.display = 'block';
+  }
+}
+document.getElementById('readAloudBtn').onclick = async () => {
+  const item = quizSet[currentQIdx];
+  if (!item) return;
+  stopReadAloud();
+  const version = speechVersion;
+  const text = spokenQuestion(item);
+  const file = AFRIKAANS_AUDIO[text];
+  if (!file) { readWithAfrikaansVoice(text, version); return; }
+  let fallbackUsed = false;
+  const fallback = () => {
+    if (fallbackUsed || version !== speechVersion) return;
+    fallbackUsed = true;
+    readWithAfrikaansVoice(text, version);
+  };
+  try {
+    const player = new Audio(`audio/af/${file}`);
+    questionAudio = player;
+    player.onerror = fallback;
+    await player.play();
+  } catch (e) {
+    fallback();
+  }
 };
 
 // Listeners

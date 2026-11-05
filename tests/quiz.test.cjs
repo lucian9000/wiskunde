@@ -261,3 +261,43 @@ test('first answer is permanent and feedback immediately reveals the correct ans
     assert.ok(elements.get('choicesGrid').children.every(btn => !btn.disabled));
   }
 });
+
+
+test('every question has a bundled Afrikaans recording', () => {
+  const { run } = loadQuiz();
+  const files = JSON.parse(run('JSON.stringify(allQuestions.map(q => AFRIKAANS_AUDIO[spokenQuestion(q)]))'));
+  for (const file of files) {
+    assert.match(file, /^[a-f0-9]{20}\.mp3$/);
+    assert.ok(fs.statSync(require('node:path').join(__dirname, '../audio/af', file)).size > 1000);
+  }
+});
+
+test('read-aloud plays the bundled audio and stops it when the question changes', async () => {
+  const { run, context } = loadQuiz();
+  const players = [];
+  context.Audio = class {
+    constructor(url) { this.url=url; this.paused=false; players.push(this); }
+    play() { return Promise.resolve(); }
+    pause() { this.paused=true; }
+  };
+  run('startNewQuiz()');
+  await run("document.getElementById('readAloudBtn').onclick()");
+  assert.match(players[0].url, /^audio\/af\/[a-f0-9]{20}\.mp3$/);
+  run('renderQuestion()');
+  assert.equal(players[0].paused, true);
+});
+
+test('failed audio never falls back to an English voice', async () => {
+  const { run, context, elements } = loadQuiz();
+  context.Audio = class { pause() {} play() { return Promise.reject(Error('network')); } };
+  let used = null;
+  context.window.speechSynthesis = {cancel(){},getVoices(){return [{lang:'en-ZA',name:'English'}];},speak(u){used=u;}};
+  context.SpeechSynthesisUtterance = class { constructor(text){this.text=text;} };
+  run('startNewQuiz()');
+  await run("document.getElementById('readAloudBtn').onclick()");
+  assert.equal(used,null);
+  assert.match(elements.get('readAloudStatus').textContent,/Afrikaanse/);
+  context.window.speechSynthesis.getVoices = () => [{lang:'en-US'}, {lang:'af-ZA',name:'Afrikaans'}];
+  await run("document.getElementById('readAloudBtn').onclick()");
+  assert.equal(used.voice.lang,'af-ZA');
+});
