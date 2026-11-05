@@ -6,7 +6,7 @@ const vm = require('node:vm');
 function loadQuiz(storage = new Map()) {
   const html = fs.readFileSync(require('node:path').join(__dirname, '../index.html'), 'utf8');
   const elements = new Map();
-  const element = () => ({ style: {}, classList: { add() {}, remove() {} }, textContent: '', innerHTML: '', children: [], appendChild(c) { this.children.push(c); }, getContext() { return { clearRect() {} }; } });
+  const element = () => ({ style: {}, classList: { add() {}, remove() {} }, textContent: '', innerHTML: '', children: [], replaceChildren() { this.children = []; }, appendChild(c) { this.children.push(c); }, getContext() { return { clearRect() {} }; } });
   const timers = [];
   const context = vm.createContext({
     document: { getElementById(id) { if (!elements.has(id)) elements.set(id, element()); return elements.get(id); }, querySelectorAll() { return []; }, createElement: element },
@@ -49,8 +49,8 @@ test('20-question session and final review shows the chosen and correct answers'
     run(`selectAnswer(${i === 0 ? wrongIndex : 'quizSet[currentQIdx].ans'}, document.createElement('button'))`);
     // Duplicate taps must not count as another answer.
     run('selectAnswer(0, document.createElement("button"))');
-    assert.equal(timers.length, 1);
-    timers.shift()();
+    assert.equal(timers.length, 0);
+    run("nextQuestion()");
   }
   assert.equal(elements.get('vicScore').textContent, '19 / 20');
   const review = elements.get('wrongAnswersReview');
@@ -144,10 +144,10 @@ test('all photographed 3D properties are covered with the school-sheet answers',
   }
 });
 
-test('a pending answer from an old round cannot advance a new round', () => {
+test('next cannot skip an unanswered question or advance a freshly started round', () => {
   const { run, timers } = loadQuiz();
   run('startNewQuiz(); selectAnswer(0, document.createElement("button")); startNewQuiz()');
-  timers.shift()();
+  run('nextQuestion()');
   assert.equal(run('currentQIdx'), 0);
 });
 
@@ -237,4 +237,27 @@ test('saved results from the previous quiz survive and new results record the su
   assert.equal(run('getHistory()[0].total'), 130);
   assert.equal(run('getHistory()[1].total'), 20);
   assert.equal(run('getHistory()[1].subject'), 'deel');
+});
+
+
+test('first answer is permanent and feedback immediately reveals the correct answer', () => {
+  for (const correct of [true, false]) {
+    const { run, elements, timers } = loadQuiz();
+    run('startNewQuiz()');
+    const answer = run('quizSet[0].opts[quizSet[0].ans]');
+    const selected = run(correct ? 'quizSet[0].ans' : '(quizSet[0].ans + 1) % 4');
+    run(`selectAnswer(${selected}, document.getElementById('choicesGrid').children[${selected}])`);
+    assert.equal(run('currentQIdx'), 0);
+    assert.equal(timers.length, 0);
+    assert.equal(run('quizSet[0].userChoice'), selected);
+    assert.ok(elements.get('answerFeedback').textContent.includes(correct ? 'Korrek!' : 'Verkeerd.'));
+    assert.ok(elements.get('answerFeedback').textContent.includes(answer));
+    assert.ok(elements.get('choicesGrid').children.every(btn => btn.disabled));
+    run('selectAnswer((quizSet[0].userChoice + 1) % 4, document.createElement("button"))');
+    assert.equal(run('quizSet[0].userChoice'), selected);
+    run('nextQuestion(); nextQuestion()');
+    assert.equal(run('currentQIdx'), 1);
+    assert.equal(elements.get('answerFeedback').style.display, 'none');
+    assert.ok(elements.get('choicesGrid').children.every(btn => !btn.disabled));
+  }
 });

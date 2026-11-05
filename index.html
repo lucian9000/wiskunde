@@ -120,6 +120,13 @@
   .choice-card:hover { background: #f1f5f9; }
   .choice-card:active, .choice-card.selected { transform: translateY(4px); box-shadow: 0 1px 0 var(--dark-border); background: #e2e8f0; }
 
+  .choice-card:disabled { cursor: default; opacity: 1; }
+  .choice-card.answer-correct { background: #dcfce7; border-color: #15803d; color: #14532d; }
+  .choice-card.answer-wrong { background: #ffe4e6; border-color: #be123c; color: #881337; }
+  .answer-feedback { margin-top: 18px; padding: 14px; border: 3px solid; border-radius: 16px; font-size: 1.1rem; font-weight: 700; line-height: 1.5; }
+  .answer-feedback.correct { background: #dcfce7; border-color: #15803d; color: #14532d; }
+  .answer-feedback.wrong { background: #ffe4e6; border-color: #be123c; color: #881337; }
+
   .review-container {
     background: #f8fafc; border: 3px solid #cbd5e1; border-radius: 16px;
     padding: 16px; margin: 20px 0; max-height: 300px; overflow-y: auto; text-align: left; display: none;
@@ -228,6 +235,8 @@
     </div>
 
     <div class="choice-grid" id="choicesGrid"></div>
+    <div id="answerFeedback" class="answer-feedback" role="status" aria-live="polite" aria-atomic="true" style="display:none;"></div>
+    <button id="nextQuestionBtn" class="action-btn btn-start" style="display:none; margin-top:18px;" disabled>Volgende vraag →</button>
   </div>
 
   <!-- PANEL 3: SUMMARY / VICTORY -->
@@ -630,6 +639,11 @@ function updateHUD() {
 
 function renderQuestion() {
   isLocked = false;
+  document.getElementById('answerFeedback').style.display = 'none';
+  document.getElementById('answerFeedback').textContent = '';
+  const next = document.getElementById('nextQuestionBtn');
+  next.style.display = 'none';
+  next.disabled = true;
   const item = quizSet[currentQIdx];
   updateHUD();
 
@@ -645,7 +659,7 @@ function renderQuestion() {
   }
 
   const grid = document.getElementById('choicesGrid');
-  grid.innerHTML = "";
+  grid.replaceChildren();
 
   item.opts.forEach((choice, idx) => {
     const btn = document.createElement('button');
@@ -656,19 +670,36 @@ function renderQuestion() {
 }
 
 function selectAnswer(chosenIdx, btnElem) {
-  if (isLocked) return;
-  isLocked = true; playSound('click');
+  const item = quizSet[currentQIdx];
+  if (isLocked || !item || item.userChoice !== null) return;
+  isLocked = true;
+  item.userChoice = chosenIdx;
+  playSound('click');
   btnElem.classList.add('selected');
-  quizSet[currentQIdx].userChoice = chosenIdx;
-
-  const version = roundVersion;
-  setTimeout(() => {
-    if (version !== roundVersion) return;
-    currentQIdx++;
-    if (currentQIdx < quizSet.length) renderQuestion();
-    else finishQuiz();
-  }, 280);
+  const correct = chosenIdx === item.ans;
+  Array.from(document.getElementById('choicesGrid').children).forEach((btn, idx) => {
+    btn.disabled = true;
+    if (idx === item.ans) btn.classList.add('answer-correct');
+    else if (idx === chosenIdx) btn.classList.add('answer-wrong');
+  });
+  const feedback = document.getElementById('answerFeedback');
+  feedback.className = `answer-feedback ${correct ? 'correct' : 'wrong'}`;
+  feedback.textContent = `${correct ? '✅ Korrek!' : '❌ Verkeerd.'} Die regte antwoord is: ${item.opts[item.ans]}`;
+  feedback.style.display = 'block';
+  const next = document.getElementById('nextQuestionBtn');
+  next.textContent = currentQIdx === quizSet.length - 1 ? 'Bekyk resultate →' : 'Volgende vraag →';
+  next.style.display = 'block';
+  next.disabled = false;
 }
+
+function nextQuestion() {
+  if (!isLocked || !quizSet[currentQIdx] || quizSet[currentQIdx].userChoice === null) return;
+  document.getElementById('nextQuestionBtn').disabled = true;
+  currentQIdx++;
+  if (currentQIdx < quizSet.length) renderQuestion();
+  else finishQuiz();
+}
+document.getElementById('nextQuestionBtn').onclick = nextQuestion;
 
 function finishQuiz() {
   document.getElementById('progressBar').style.width = "100%";
